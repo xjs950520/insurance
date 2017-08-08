@@ -15,10 +15,11 @@ public class MyInterceptorConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry interceptorRegistry) {
-        InterceptorRegistration ir = interceptorRegistry.addInterceptor(new LoginInterceptor());
+       InterceptorRegistration ir = interceptorRegistry.addInterceptor(new LoginInterceptor());
         //配置拦截路径
-       // ir.addPathPatterns("/lt");
+
+        ir.addPathPatterns("/**").excludePathPatterns("/sendCodeController/sendCode", "/loginController/checkLogin");
         //配置不拦截路径
-        ir.excludePathPatterns("/loginController/checkLogin");
+        //ir.excludePathPatterns("/loginController/checkLogin");
     }
 }

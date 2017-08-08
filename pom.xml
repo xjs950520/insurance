@@ -59,6 +59,29 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>3.2.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/aliyun-java-sdk-core-3.2.2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-dybaseapi</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/aliyun-java-sdk-dybaseapi-1.0.0-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/aliyun-java-sdk-dysmsapi-1.0.0-SANPSHOT.jar</systemPath>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -68,6 +91,17 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<targetPath>lib/</targetPath>
+				<directory>lib/</directory>
+				<includes>
+					<include>**/aliyun-java-sdk-core-3.2.2.jar</include>
+					<include>**/aliyun-java-sdk-dybaseapi-1.0.0-SNAPSHOT.jar</include>
+					<include>**/aliyun-java-sdk-dysmsapi-1.0.0-SANPSHOT.jar</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 
