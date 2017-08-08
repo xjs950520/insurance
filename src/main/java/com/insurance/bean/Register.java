@@ -1,16 +1,18 @@
 package com.insurance.bean;
 
 /**
+ * 注册人员
  * Created by xujunshuai on 2017/8/7.
  */
 public class Register {
-    private String name;
-    private String phone;
-    private String password;
-    private String card;
-    private String introducer;
-    private int intro_source;
-    private String ct_date;
+    private String name; //姓名
+    private String phone; //手机号
+    private String password; //密码
+    private String idCard; //身份证
+    private int introducer; //推荐人
+    private int intro_source; //注册来源，关联intro_source
+    private String ct_date; //注册时间
+    private int status; //是否报名体检，0是未，
 
     public Register() {
     }
@@ -39,19 +41,19 @@ public class Register {
         this.password = password;
     }
 
-    public String getCard() {
-        return card;
+    public String getIdCard() {
+        return idCard;
     }
 
-    public void setCard(String card) {
-        this.card = card;
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 
-    public String getIntroducer() {
+    public int getIntroducer() {
         return introducer;
     }
 
-    public void setIntroducer(String introducer) {
+    public void setIntroducer(int introducer) {
         this.introducer = introducer;
     }
 
@@ -70,4 +72,13 @@ public class Register {
     public void setCt_date(String ct_date) {
         this.ct_date = ct_date;
     }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }
+

@@ -35,7 +35,7 @@ public class RegisterDaoImpl implements RegisterDao {
 
     @Override
     public Register getRegisterByPhone(String phone) {
-        List<Register> list= jdbcTemplate.query("select * from t_register where id = ?", new Object[]{phone},new BeanPropertyRowMapper<>(Register.class));
+        List<Register> list= jdbcTemplate.query("select * from t_register where phone = ?", new Object[]{phone},new BeanPropertyRowMapper<>(Register.class));
         if(list != null && list.size() > 0){
             return list.get(0);
         }else{

@@ -1,26 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="../../js/jquery.tips.js"></script>
+
 
 </html>
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
     <script src="../../js/jquery-1.8.3.min.js"></script>
+    <!--<script src="../../js/jquery-1.7.2.js"></script>-->
+    <script src="../../js/jquery.tips.js"></script>
     <script type="text/javascript">
+            //后台校验
+           function severCheck() {
+                alert("dfdf");
+                if (check()) {
+
+                    var phone = $("#phone").val();
+                    var password = $("#password").val();
+                    $.ajax({
+                        type : "POST",
+                        url : 'loginController/checkLogin2.do',
+                        data : 'phone=' + phone + '&&password=' + password,
+                        dataType : 'json',
+                        cache : false,
+                        success : function(data) {
+                            if (data == "nameFail") {
+                                $("#phone").tips({
+                                    side : 1,
+                                    msg : "用户不存在",
+                                    bg : '#FF5080',
+                                    time : 5
+                                });
+                                $("#phone").focus();
+                            } else if (data == "pwdFail") {
+                                $("#password").tips({
+                                    side : 1,
+                                    msg : "密码输入有误",
+                                    bg : '#FF5080',
+                                    time : 5
+                                });
+                                $("#password").focus();
+                            }else if (data == "pass") {
+                                window.location.href = "join.html";
+                            }else {
+                                $("#phone").tips({
+                                    side : 1,
+                                    msg : "未知错误",
+                                    bg : '#FF5080',
+                                    time : 5
+                                });
+                                $("#phone").focus();
+                            }
+                        }
+                    });
+                }
+            }
+            //客户端校验
+           function check() {
+                alert("1");
+                if ($("#phone").val() == "") {
+                    alert("Hello");
+                    $("#phone").tips({
+                        side: 2,
+                        msg: '用户名不得为空',
+                        bg: '#AE81FF',
+                        time: 3
+                    });
+
+                    $("#phone").focus();
+                    return false;
+                } else {
+                    $("#phone").val(jQuery.trim($('#phone').val()));
+                }
+
+                if ($("#password").val() == "") {
+
+                    $("#password").tips({
+                        side: 2,
+                        msg: '密码不得为空',
+                        bg: '#AE81FF',
+                        time: 3
+                    });
+
+                    $("#password").focus();
+                    return false;
+                }
+
+                return true;
+            }
 
     </script>
 </head>
 
 <body>
-    <input type="button" onclick="show()" value="show">
+
     <h4>登录:</h4>
-    <form action="#" method="post">
+    <form action="" method="post">
         <table>
             <tr>
-                <td>手机号:</td><td><input type="text" name="phone"></td>
+                <td>手机号:</td><td><input type="text" name="phone" id="phone"></td>
             </tr>
             <tr>
-                <td>登录密码:</td><td><input type="password" name="password"></td>
+                <td>登录密码:</td><td><input type="password" name="password" id="password"></td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -29,7 +111,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center"><input type="submit" value="登录"></td>
+                <td colspan="2" style="text-align: center"><input type="button" value="登录" onclick="check()"></td>
             </tr>
         </table>
     </form>
