@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * 配置拦截器
  * Created by xujunshuai on 2017/8/7.
  */
-@Configuration
+//@Configuration
 public class MyInterceptorConfig extends WebMvcConfigurerAdapter {
 
     @Override
@@ -18,7 +18,7 @@ public class MyInterceptorConfig extends WebMvcConfigurerAdapter {
        InterceptorRegistration ir = interceptorRegistry.addInterceptor(new LoginInterceptor());
         //配置拦截路径
 
-        ir.addPathPatterns("/**").excludePathPatterns("/sendCodeController/sendCode", "/loginController/checkLogin");
+        //ir.addPathPatterns("/**").excludePathPatterns("/sendCodeController/sendCode", "/loginController/checkLogin");
         //配置不拦截路径
         //ir.excludePathPatterns("/loginController/checkLogin");
     }
