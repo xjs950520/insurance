@@ -20,7 +20,10 @@ public class RegisterDaoImpl implements RegisterDao {
 
     @Override
     public int add(Register register) {
-        return 0;
+        int resRow = jdbcTemplate.update("insert into register(name, phone, password, intro_phone, intro_source,ct_date) VALUES(?,?,?,?,?,?) ", new Object[]{
+            register.getName(), register.getPhone(), register.getPassword(), register.getIntro_phone(), register.getIntro_source(),register.getCt_date()
+        });
+        return resRow;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class RegisterDaoImpl implements RegisterDao {
 
     @Override
     public Register getRegisterByPhone(String phone) {
-        List<Register> list= jdbcTemplate.query("select * from t_register where phone = ?", new Object[]{phone},new BeanPropertyRowMapper<>(Register.class));
+        List<Register> list= jdbcTemplate.query("select * from register where phone = ?", new Object[]{phone},new BeanPropertyRowMapper<>(Register.class));
         if(list != null && list.size() > 0){
             return list.get(0);
         }else{

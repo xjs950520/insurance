@@ -17,6 +17,7 @@ public class LoginInterceptor implements HandlerInterceptor{
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         System.out.println("......................拦截器启动......................");
         HttpSession session = httpServletRequest.getSession();
+
         Register register = (Register) session.getAttribute("register");
         if(register == null){
             httpServletResponse.sendRedirect("");

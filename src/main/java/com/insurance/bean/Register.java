@@ -9,10 +9,10 @@ public class Register {
     private String phone; //手机号
     private String password; //密码
     private String idCard; //身份证
-    private int introducer; //推荐人
-    private int intro_source; //注册来源，关联intro_source
+    private String intro_phone; //推荐人
+    private String intro_source; //注册来源，关联intro_source
     private String ct_date; //注册时间
-    private int status; //是否报名体检，0是未，
+    private int join_status; //是否报名体检，0是未，
 
     public Register() {
     }
@@ -49,19 +49,19 @@ public class Register {
         this.idCard = idCard;
     }
 
-    public int getIntroducer() {
-        return introducer;
+    public String getIntro_phone() {
+        return intro_phone;
     }
 
-    public void setIntroducer(int introducer) {
-        this.introducer = introducer;
+    public void setIntro_phone(String intro_phone) {
+        this.intro_phone = intro_phone;
     }
 
-    public int getIntro_source() {
+    public String getIntro_source() {
         return intro_source;
     }
 
-    public void setIntro_source(int intro_source) {
+    public void setIntro_source(String intro_source) {
         this.intro_source = intro_source;
     }
 
@@ -73,12 +73,12 @@ public class Register {
         this.ct_date = ct_date;
     }
 
-    public int getStatus() {
-        return status;
+    public int getJoin_status() {
+        return join_status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setJoin_status(int join_status) {
+        this.join_status = join_status;
     }
 }
 

@@ -6,13 +6,11 @@ import com.insurance.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by xujunshuai on 2017/8/7.
@@ -24,9 +22,8 @@ public class loginController {
     @Autowired
     private RegisterService registerService;
 
-    @GetMapping(value = "/checkLogin")
-    @ResponseBody
-    public String checkLogin(HttpServletRequest request, HttpServletResponse response){
+    @PostMapping(value = "/checkLogin")
+    public void checkLogin(HttpServletRequest request, HttpServletResponse response){
         String phone = request.getParameter("phone");
         String password = request.getParameter("password");
         String result="";
@@ -42,7 +39,11 @@ public class loginController {
         }else{
             result = "nameFail";
         }
-        return result;
+        try {
+            response.getWriter().println(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @GetMapping(value = "checkLogin2")

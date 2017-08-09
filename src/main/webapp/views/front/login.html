@@ -12,19 +12,18 @@
     <script src="../../js/jquery.tips.js"></script>
     <script type="text/javascript">
             //后台校验
-           function severCheck() {
-                alert("dfdf");
+           function severCheck(){
                 if (check()) {
-
                     var phone = $("#phone").val();
                     var password = $("#password").val();
                     $.ajax({
                         type : "POST",
-                        url : 'loginController/checkLogin2.do',
-                        data : 'phone=' + phone + '&&password=' + password,
-                        dataType : 'json',
+                        url : "../../loginController/checkLogin",
+                        data : "phone=" + phone + "&&password=" + password,
+                        dataType : "json",
                         cache : false,
                         success : function(data) {
+                            alert(1);
                             if (data == "nameFail") {
                                 $("#phone").tips({
                                     side : 1,
@@ -42,6 +41,7 @@
                                 });
                                 $("#password").focus();
                             }else if (data == "pass") {
+                                alert("pass");
                                 window.location.href = "join.html";
                             }else {
                                 $("#phone").tips({
@@ -53,13 +53,12 @@
                                 $("#phone").focus();
                             }
                         }
-                    });
+                    },"text");
                 }
             }
 
             //客户端校验
            function check() {
-                alert("1");
                 if ($("#phone").val() == "") {
                     alert("Hello");
                     $("#phone").tips({
@@ -112,7 +111,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center"><input type="button" value="登录" onclick="check()"></td>
+                <td colspan="2" style="text-align: center"><input type="button" value="登录" onclick="severCheck()"></td>
             </tr>
         </table>
     </form>
