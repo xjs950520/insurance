@@ -40,6 +40,6 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public List<Register> findAll() {
-        return null;
+        return registerDao.findAll();
     }
 }
