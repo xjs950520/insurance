@@ -3,13 +3,14 @@ package com.insurance.bean;
 /**推荐人员
  * Created by xushuaijun on 2017-08-09 .
  */
-public class introducer {
+public class Introducer {
 
     private int id;
+    private int number;//假字段
     private String intro_name; //推荐人姓名
     private String intro_phone; //手机号
 
-    public introducer() {
+    public Introducer() {
     }
 
     public int getId() {
@@ -34,5 +35,13 @@ public class introducer {
 
     public void setIntro_phone(String intro_phone) {
         this.intro_phone = intro_phone;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

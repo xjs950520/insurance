@@ -49,7 +49,7 @@ public class RegisterDaoImpl implements RegisterDao {
 
     @Override
     public List<Register> findAll() {
-        List<Register> list = jdbcTemplate.query("SELECT * from register r,introducer e where r.intro_phone=e.intro_phone ORDER by r.ct_date DESC", new Object[]{}, new BeanPropertyRowMapper(Register.class));
+        List<Register> list = jdbcTemplate.query("select * from register r LEFT JOIN introducer i on r.intro_phone=i.intro_phone ORDER by r.ct_date DESC", new Object[]{}, new BeanPropertyRowMapper(Register.class));
         if(list != null){
             return list;
         }else{

@@ -17,6 +17,6 @@ public interface RegisterDao {
 
     public Register getRegisterByPhone(String phone);
 
-    public List<Register> findAll();
+    public List<Register> findAll();//注册人查询
 
 }

@@ -3,12 +3,12 @@ package com.insurance.bean;
 /**推荐人信息来源
  * Created by xushuaijun on 2017-08-09 .
  */
-public class intro_source {
+public class Intro_source {
 
     private int id;
     private String intro_source;
 
-    public intro_source() {
+    public Intro_source() {
     }
 
     public int getId() {
