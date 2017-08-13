@@ -28,4 +28,12 @@ public class IntroducerDaoImpl implements IntroducerDao{
             return list;
         }
     }
+
+    @Override
+    public int add(Introducer introducer) {
+        int resRow = jdbcTemplate.update("insert into introducer(intro_name, intro_phone) VALUES(?,?) ", new Object[]{
+                introducer.getIntro_name(),introducer.getIntro_phone()
+        });
+        return resRow;
+    }
 }

@@ -10,4 +10,6 @@ import java.util.List;
 public interface IntroducerService {
 
     public List<Introducer> findAll();
+
+    public int add(Introducer introducer);
 }

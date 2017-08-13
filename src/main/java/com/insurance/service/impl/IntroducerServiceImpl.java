@@ -14,10 +14,17 @@ import java.util.List;
 @Service
 public class IntroducerServiceImpl implements IntroducerService {
 
+
+
     @Autowired
     private IntroducerDao introducerDao;
     @Override
     public List<Introducer> findAll() {
         return introducerDao.findAll();
+    }
+
+    @Override
+    public int add(Introducer introducer) {
+        return introducerDao.add(introducer);
     }
 }

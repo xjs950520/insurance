@@ -8,7 +8,14 @@
     <link rel="stylesheet" href="/bootstrap-responsive.min.css"/>
     <script src="/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/bootstrap-theme.css"/>
-    <script src="/static/npm.js"></script>
+    <script src="/npm.js"></script>
+
+    <script src="/jquery-1.7.2.js"></script>
+    <!-- 弹窗组件-->
+
+    <script src="/zDrag.js"></script>
+    <script src="/zDialog.js"></script>
+    <script src="/jquery.tips.js"></script>
     <style type="text/css">
         #export{
             width:50px;
@@ -16,6 +23,9 @@
             right: 40px;
         }
     </style>
+
+
+
 </head>
 <script type="text/javascript">
     $(function(){
@@ -59,6 +69,27 @@
         $(".option").click(function(){
             var pageSize = $("#pageSize").val();
             window.location.href = "/introducerController/findAll?pageSize="+pageSize;
+        });
+        $("#export").click(function(){
+            var diag = new Dialog();
+
+
+
+            diag.Drag = true;
+
+            diag.Title = "选择Excel表导入数据";
+
+            diag.URL = "/introducerController/toExcelImport";
+
+            diag.Width = 290;
+            diag.height = 260;
+            alert(6);
+            diag.CancelEvent = function () {//关闭事件
+                diag.close();
+                window.location.href="/introducerController/findAll";
+            };
+
+            diag.show();
         });
 
     });

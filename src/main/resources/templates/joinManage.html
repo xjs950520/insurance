@@ -60,6 +60,9 @@
             var pageSize = $("#pageSize").val();
             window.location.href = "/joinController/findAll?pageSize="+pageSize;
         });
+        $("#export").click(function(){
+            window.location.href="/joinController/exportExcel";
+        });
 
     });
 </script>

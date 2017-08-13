@@ -178,7 +178,112 @@ public class ExportExcel_Register {
         cell.setCellValue("推荐人手机号");
         cell.setCellStyle(style);
 
+        for(int i = 0;i<joinRegisterExcelList.size();i++){
+            row = sheet.createRow(i+1);
+            row.setHeightInPoints(20);
+            Register datas = joinRegisterExcelList.get(i);
+            if(datas != null){
+                //序号
+                if(!String.valueOf(datas.getNumber()).equals("")){
+                    cell = row.createCell(0);
+                    cell.setCellValue(datas.getNumber());
+                    cell.setCellStyle(style);
 
-        return null;
+                }else{
+                    cell = row.createCell(0);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+                }
+                //姓名
+                if(datas.getName() !=null && !datas.getName().equals("")){
+                    cell = row.createCell(1);
+                    cell.setCellValue(datas.getName());
+                    cell.setCellStyle(style);
+
+                }else{
+                    cell = row.createCell(1);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+
+                }
+
+                //手机号
+                if(datas.getPhone() !=null && !datas.getPhone().equals("")){
+                    cell = row.createCell(2);
+                    cell.setCellValue(datas.getPhone());
+                    cell.setCellStyle(style);
+
+                }else{
+                    cell = row.createCell(2);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+
+                }
+
+                //报名时间
+                if(datas.getJoin_date() !=null && !datas.getJoin_date().equals("")){
+                    cell = row.createCell(3);
+                    cell.setCellValue(datas.getJoin_date());
+                    cell.setCellStyle(style);
+
+                }else{
+                    cell = row.createCell(3);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+
+                }
+
+                //套餐
+                if(datas.getMeal_sort() !=null && !datas.getMeal_sort().equals("")){
+                    cell = row.createCell(4);
+                    cell.setCellValue(datas.getMeal_sort());
+                    cell.setCellStyle(style);
+
+                }else{
+                    cell = row.createCell(4);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+
+                }
+
+                //体验卡卡号
+                if(datas.getExperience_card() !=null && !datas.getExperience_card().equals("")){
+                    cell = row.createCell(5);
+                    cell.setCellValue(datas.getExperience_card());
+                    cell.setCellStyle(style);
+
+                }else{
+                    cell = row.createCell(5);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+
+                }
+                //推荐人
+                if(datas.getIntro_name() !=null && !datas.getIntro_name().equals("")){
+                    cell = row.createCell(5);
+                    cell.setCellValue(datas.getIntro_name());
+                    cell.setCellStyle(style);
+
+                }else{
+                    cell = row.createCell(5);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+
+                }
+                //推荐人手机号
+                if(datas.getIntro_phone() !=null && !datas.getIntro_phone().equals("")){
+                    cell = row.createCell(5);
+                    cell.setCellValue(datas.getIntro_phone());
+                    cell.setCellStyle(style);
+
+                }else{
+                    cell = row.createCell(5);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+
+                }
+            }
+        }
+        return wb;
     }
 }

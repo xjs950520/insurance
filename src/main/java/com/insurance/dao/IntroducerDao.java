@@ -8,5 +8,8 @@ import java.util.List;
  * Created by xujunshuai on 2017/8/11.
  */
 public interface IntroducerDao {
+
     public List<Introducer> findAll();
+
+    public int add(Introducer introducer);
 }

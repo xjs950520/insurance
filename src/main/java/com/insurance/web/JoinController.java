@@ -2,14 +2,20 @@ package com.insurance.web;
 
 import com.insurance.bean.Register;
 import com.insurance.service.JoinService;
+import com.insurance.util.ExportExcel_Register;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,11 +59,8 @@ public class JoinController {
         for(int i=beginIndex;i<endIndex;i++){
             list.add(bigList.get(i));
         }
-       /* int i=1;
-        for(Register register:list){
-            register.setNumber(i);
-            i++;
-        }*/
+        request.getSession().setAttribute("list",list);
+
         int totalPage=0;
         double j = (double)count/pageSize;//计算共有多少页
         if(Math.round(j)!=j ){
@@ -66,11 +69,34 @@ public class JoinController {
             totalPage = (int) j;
         }
 
-        int currentPage=pageno;
+        int currentPage = pageno;
         request.setAttribute("totalPage",totalPage);
         request.setAttribute("registers",list);
         request.setAttribute("currentPage",currentPage);
         request.setAttribute("pageSize",pageSize);
         return "joinManage";
+    }
+    @GetMapping(value = "/exportExcel")
+    @ResponseBody
+    public String registerExcel(HttpServletRequest request, HttpServletResponse response){
+        List<Register> list = (List<Register>) request.getSession().getAttribute("list");
+        if(list.size()<=0 || list.isEmpty()){
+            return null;
+        }
+        ExportExcel_Register exportExcel_register = new ExportExcel_Register();
+        try {
+            HSSFWorkbook wb = exportExcel_register.getJoinRegisterWb(list);
+
+            String dateName = sdf2.format(new Date()).trim();
+            String fileName = dateName.substring(0, 4) + dateName.substring(5, 7) + dateName.substring(8, 10) + dateName.substring(11, 13) + dateName.substring(14, 16);
+
+            //自选导出位置
+            response.setContentType("application/octet-stream; charset=utf-8");
+            response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName + ".xls", "UTF-8"));
+            wb.write(response.getOutputStream());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
