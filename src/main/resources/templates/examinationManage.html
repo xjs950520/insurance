@@ -2,20 +2,16 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <title>注册人员管理</title>
+    <title>体检报告</title>
     <script src="/js/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-responsive.min.css"/>
     <script src="/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/css/bootstrap-theme.css"/>
     <script src="/js/npm.js"></script>
-    <style type="text/css">
-        #export{
-            width:50px;
-            position: absolute;
-            right: 40px;
-        }
-    </style>
+    <script src="/js/bootbox.min.js"></script>
+
+
 </head>
 <script type="text/javascript">
     $(function(){
@@ -29,67 +25,81 @@
         $("#goPage").click(function(){
             var pageno=$("#toGoPage").val();
             if(pageno==""){
-                window.location.href = "/registerController/findAll?pageno=1";
+                window.location.href = "/examinationController/findAll?pageno=1";
             }else{
-                window.location.href = "/registerController/findAll?pageno="+pageno;
+                window.location.href = "/examinationController/findAll?pageno="+pageno;
             }
 
         });
         $("#headPage").click(function(){
-            window.location.href = "/registerController/findAll?pageno=1";
+            window.location.href = "/examinationController/findAll?pageno=1";
         });
         $("#next").click(function(){
 
             var pageno =Number($("#nowpage").html())+1;
             if($("#totalPage").html()>=pageno){
-                window.location.href = "/registerController/findAll?pageno="+pageno;
+                window.location.href = "/examinationController/findAll?pageno="+pageno;
             }else{
-                window.location.href = "/registerController/findAll?pageno="+(pageno-1);
+                window.location.href = "/examinationController/findAll?pageno="+(pageno-1);
             }
         });
         $("#up").click(function(){
 
             var pageno =Number($("#nowpage").html())-1;
             if(pageno>=1){
-                window.location.href = "/registerController/findAll?pageno="+pageno;
+                window.location.href = "/examinationController/findAll?pageno="+pageno;
             }else{
-                window.location.href = "/registerController/findAll?pageno=1";
+                window.location.href = "/examinationController/findAll?pageno=1";
             }
         });
         $(".option").click(function(){
             var pageSize = $("#pageSize").val();
-            window.location.href = "/registerController/findAll?pageSize="+pageSize;
+            window.location.href = "/examinationController/findAll?pageSize="+pageSize;
         });
         $("#export").click(function(){
-            window.location.href="/registerController/exportExcel";
+
+            var result=confirm("确定上传？");
+            if(result){
+                $.ajax({
+                    type : "GET",
+                    url : "/examinationController/import",
+                    data : "",
+                    success:function(data){
+                        if(data=="0"){
+                            alert("文件所放路径不符合要求！");
+                        }else if(data=="1"){
+                            alert("无数据可添加！");
+                        }else if(data=="2"){
+                            alert("添加成功");
+                            window.location.href="/examinationController/findAll";
+                        }
+                    }
+                });
+            }
+
         });
 
     });
 </script>
 <body>
-    <div style="overflow: auto;height: 60px;border-bottom: 1px solid silver">
-        <input type="button" value="导出" id="export" style="margin-top: 20px;width: 80px;" class="btn"/>
-    </div>
-    <div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>序号</th><th>手机号</th><th>姓名</th><th>身份证号</th><th>推荐人</th><th>推荐人手机号</th><th>注册时间</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="register:${registers}">
-                <td th:text="${register.number}"></td>
-                <td th:text="${register.phone}"></td>
-                <td th:text="${register.name}"></td>
-                <td th:text="${register.idCard}"></td>
-                <td th:text="${register.intro_name}"></td>
-                <td th:text="${register.intro_phone}"></td>
-                <td th:text="${register.ct_date}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div style="overflow: auto;height: 60px;border-bottom: 1px solid silver">
+    <input type="button" value="上传" id="export" style="margin-top: 20px;width: 95px;" class="btn"/>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>序号</th><th>身份证号</th><th>时间</th><th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="examination:${examinations}">
+        <td th:text="${examination.number}"></td>
+        <td th:text="${examination.idCard}"></td>
+        <td th:text="${examination.check_date}"></td>
+        <td><a style="cursor:pointer;text-decoration: none">查看报告</a></td>
+    </tr>
+    </tbody>
+</table>
 <div class="pagination">
 
     <ul>
@@ -114,6 +124,5 @@
     </ul>
 
 </div>
-
 </body>
 </html>

@@ -42,7 +42,12 @@ public class JoinController {
         return "registerManage";*/
         int pageno = Integer.parseInt(request.getParameter("pageno")==null || request.getParameter("pageno").equals("")?"1":request.getParameter("pageno"));
 
-        int pageSize = Integer.parseInt(request.getParameter("pageSize")==null? "5" :request.getParameter("pageSize"));
+        int pageSize = 5;
+        if(request.getParameter("pageSize")!=null){
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        }else if(request.getSession().getAttribute("p")!=null && request.getParameter("pageSize")==null){
+            pageSize = (int) request.getSession().getAttribute("p");
+        }
         List<Register> bigList = joinService.findAll();
         int l=1;
         for(Register register:bigList){
@@ -74,6 +79,7 @@ public class JoinController {
         request.setAttribute("registers",list);
         request.setAttribute("currentPage",currentPage);
         request.setAttribute("pageSize",pageSize);
+        request.getSession().setAttribute("p", pageSize);
         return "joinManage";
     }
     @GetMapping(value = "/exportExcel")

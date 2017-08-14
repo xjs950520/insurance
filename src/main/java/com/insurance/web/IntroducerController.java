@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +36,12 @@ public class IntroducerController {
     public String findAll(HttpServletRequest request){
 
         int pageno = Integer.parseInt(request.getParameter("pageno")==null || request.getParameter("pageno").equals("")?"1":request.getParameter("pageno"));
-
-        int pageSize = Integer.parseInt(request.getParameter("pageSize")==null? "5" :request.getParameter("pageSize"));
+        int pageSize = 5;
+        if(request.getParameter("pageSize")!=null){
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        }else if(request.getSession().getAttribute("p")!=null && request.getParameter("pageSize")==null){
+            pageSize = (int) request.getSession().getAttribute("p");
+        }
         List<Introducer> bigList = introducerService.findAll();
 
         int l=1;
@@ -67,13 +72,14 @@ public class IntroducerController {
         request.setAttribute("registers",list);
         request.setAttribute("currentPage",currentPage);
         request.setAttribute("pageSize",pageSize);
+        request.getSession().setAttribute("p", pageSize);
         return "introducerManage";
     }
-    //进入介绍人导入界面
+   /* //进入介绍人导入界面
     @RequestMapping("/toExcelImport")
     public String toExcelImport(){
         return "chooseExcel";
-    }
+    }*/
 
     @PostMapping(value="/excelImport")
     @ResponseBody
@@ -83,16 +89,27 @@ public class IntroducerController {
 		File excelFile=(File)request.getAttribute("file");
 		System.out.println(excelFile==null);
 		InputStream fileIn = file.getInputStream();*/
+		String testPath = request.getSession().getServletContext().getRealPath("excelImport");
+		//获取文件名
+        String fileName = file.getOriginalFilename();
+        //获取文件后缀名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        //文件上传后的路径
+        String path = "D://IdeaProjects//insurance//src//main//resources//static//";
+        File dest = new File(path+fileName);
+        if(!dest.getParentFile().exists()){
+            dest.mkdirs();
+        }
+        file.transferTo(dest);
 
         //文件上传
-        String path=request.getSession().getServletContext().getRealPath("excelImport.do");
+        /*String path=request.getSession().getServletContext().getRealPath("excelImport");
         String fileName = file.getOriginalFilename();
         File dir=new File(path,fileName);
         if(!dir.exists()){
             dir.mkdirs();
-        }
+        }*/
         //MultipartFile自带的解析方法
-        file.transferTo(dir);
 
         //获得下载文件的输入流
         String putFileName=path+"/"+fileName;//获得上传文件的路径
@@ -123,7 +140,9 @@ public class IntroducerController {
                     introducer.setIntro_name(r.getCell(1).toString());
                 }
                 if(r.getCell(2) != null && !r.getCell(2).toString().trim().equals("")){
-                    introducer.setIntro_phone(r.getCell(2).toString());
+                    BigDecimal bd = new BigDecimal(r.getCell(2).toString());
+                    String phone = bd.toPlainString();
+                    introducer.setIntro_phone(phone);
                 }
                 rows = introducerService.add(introducer);
             }

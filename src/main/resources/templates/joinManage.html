@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8"/>
     <title>报名人员管理</title>
-    <script src="/jquery-1.8.3.min.js"></script>
-    <link rel="stylesheet" href="/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/bootstrap-responsive.min.css"/>
-    <script src="/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/bootstrap-theme.css"/>
-    <script src="/static/npm.js"></script>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css"/>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap-theme.css"/>
+    <script src="/js/npm.js"></script>
     <style type="text/css">
         #export{
             width:50px;
@@ -109,7 +109,7 @@
                     <option th:text="10"  class="option">10</option>
                     <option th:text="15"  class="option">15</option>
                     <option th:text="20" class="option">20</option>
-                </select><span th:text="${pageSize}" id="content"></span>
+                </select><span th:text="${pageSize}" id="content" style="display: none"></span>
             </li>
         </ul>
 

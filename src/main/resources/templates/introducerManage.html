@@ -3,24 +3,49 @@
 <head>
     <meta charset="UTF-8"/>
     <title>报名人员管理</title>
-    <script src="/jquery-1.8.3.min.js"></script>
-    <link rel="stylesheet" href="/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/bootstrap-responsive.min.css"/>
-    <script src="/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/bootstrap-theme.css"/>
-    <script src="/npm.js"></script>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css"/>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap-theme.css"/>
+    <script src="/js/npm.js"></script>
 
-    <script src="/jquery-1.7.2.js"></script>
+    <script src="/js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="/js/jquery-form.js"></script>
     <!-- 弹窗组件-->
 
-    <script src="/zDrag.js"></script>
-    <script src="/zDialog.js"></script>
-    <script src="/jquery.tips.js"></script>
+    <script src="/js/zDrag.js"></script>
+    <script src="/js/zDialog.js"></script>
+    <script src="/js/jquery.tips.js"></script>
     <style type="text/css">
         #export{
             width:50px;
+        }
+        #filter{
+            display:none;
             position: absolute;
-            right: 40px;
+            top:0%;
+            left:0%;
+            width:100%;
+            height: 100%;
+            background: #b1bac1;
+            z-index: 1001;
+            -moz-opacity: 0.5;
+            opacity: .50;
+            filter: alpha(opacity=50);
+        }
+        #show{
+            display:none;
+            position: absolute;
+            top:18%;
+            left:30%;
+            width:30%;
+            height:35%;
+            padding:8px;
+            border:8px solid #E8E9F7;
+            background-color: white;
+            z-index: 1002;
+            overflow: auto;
         }
     </style>
 
@@ -71,28 +96,68 @@
             window.location.href = "/introducerController/findAll?pageSize="+pageSize;
         });
         $("#export").click(function(){
-            var diag = new Dialog();
-
-
-
-            diag.Drag = true;
-
-            diag.Title = "选择Excel表导入数据";
-
-            diag.URL = "/introducerController/toExcelImport";
-
-            diag.Width = 290;
-            diag.height = 260;
-            alert(6);
-            diag.CancelEvent = function () {//关闭事件
-                diag.close();
-                window.location.href="/introducerController/findAll";
-            };
-
-            diag.show();
+            $("#filter").css({"display":"block"});
+            $("#show").css({"display":"block"});
         });
 
     });
+</script>
+<script type="text/javascript">
+    function change(){
+        $("#excel").val($("#lefile").val());
+        var fileName = "";
+        var path = $("#lefile").val();
+        var pos1 = path.lastIndexOf("/");
+        var pos2 = path.lastIndexOf("\\");
+        var pos = Math.max(pos1, pos2);
+        if(0 > pos){
+            fileName=path;
+        }else{
+            fileName=path.substring(pos+1);
+        }
+        $("#excel").val(fileName);
+    }
+    function save() {
+        //验证是否选择
+        if ($("#excel").val() == "") {
+
+            $("#excel").tips({
+                side : 3,
+                msg : '请选择文件',
+                bg : '#AE81FF',
+                time : 2
+            });
+            $("#excel").focus();
+            return false;
+        }
+        if($("#excel").val().indexOf(".xls")==-1){
+            $("#excel").tips({
+                side : 3,
+                msg : '请选择excel文件',
+                bg : '#AE81FF',
+                time : 2
+            });
+            $("#excel").focus();
+            return false;
+        }
+        $("#doForm").ajaxSubmit({
+            url : "/introducerController/excelImport",
+            type : "post",
+            dataType : "json",
+            success : function(data) {
+                if (data == "1") {
+                    alert("导入数据成功！");
+                    window.location.href="/introducerController/findAll"
+                } else if(data=="2"){
+                    alert("保存失败!");
+                }
+            }
+        });
+    }
+    function remove(){
+        $("#filter").css({"display":"none"});
+        $("#show").css({"display":"none"});
+    }
 </script>
 <body>
     <div style="overflow: auto;height: 60px;border-bottom: 1px solid silver">
@@ -131,10 +196,52 @@
                     <option th:text="10"  class="option">10</option>
                     <option th:text="15"  class="option">15</option>
                     <option th:text="20" class="option">20</option>
-                </select><span th:text="${pageSize}" id="content"></span>
+                </select><span th:text="${pageSize}" id="content" style="display: none"></span>
             </li>
         </ul>
 
+    </div>
+    <div id="filter">
+
+    </div>
+    <div id="show">
+        <form id="doForm" action="/introducerController/excelImport"
+              method="post" enctype="multipart/form-data">
+            <div id="zhongxin">
+                <table align="center">
+                    <tr>
+                        <td>&nbsp;&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="file" style="display:none" id="lefile" name="file" onchange="change()"/></td>
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            <div class="input-append">
+                                <input id="excel" class="input-large" type="text" name="excel"
+                                       style="height:25px" readonly="readonly"/>
+                                <a class="btn btn-success" onclick="$('#lefile').click();" style="height:25px">选择Excel文件</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"><a
+                                class="btn  btn-primary" onclick="save();">确定</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a class="btn  btn-danger" onclick="remove();">取消</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
     </div>
 </body>
 </html>
