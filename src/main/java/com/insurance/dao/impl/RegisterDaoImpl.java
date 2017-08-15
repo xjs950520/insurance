@@ -13,7 +13,7 @@ import java.util.List;
  * Created by xujunshuai on 2017/8/7.
  */
 @Repository
-public class RegisterDaoImpl implements RegisterDao {
+public class RegisterDaoImpl implements RegisterDao{
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -55,6 +55,16 @@ public class RegisterDaoImpl implements RegisterDao {
         }else{
 
             return list;
+        }
+    }
+
+    @Override
+    public Register getRegisterByName(String name) {
+        List<Register> list= jdbcTemplate.query("select * from register where name = ?", new Object[]{name},new BeanPropertyRowMapper<>(Register.class));
+        if(list != null && list.size() > 0){
+            return list.get(0);
+        }else{
+            return null;
         }
     }
 }

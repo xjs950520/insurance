@@ -8,13 +8,14 @@ import java.util.List;
  * Created by xujunshuai on 2017/8/7.
  */
 public interface RegisterService {
-    public int add(Register register);
+    int add(Register register);
 
-    public int del(Register register);
+    int del(Register register);
 
-    public int update(Register register);
+    int update(Register register);
 
-    public Register getRegisterByPhone(String phone);
+    Register getRegisterByPhone(String phone);
 
-    public List<Register> findAll();
+    List<Register> findAll();
+    Register getRegisterByName(String name);
 }

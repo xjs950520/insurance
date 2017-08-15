@@ -33,4 +33,10 @@ public class ExaminationDaoImpl implements ExaminationDao{
         });
         return resRow;
     }
+
+    @Override
+    public List<Examination> findByIdCard(String idCard) {
+        List<Examination> list = jdbcTemplate.query("select * from examination e where e.idCard=? order by check_date desc", new Object[]{idCard}, new BeanPropertyRowMapper(Examination.class));
+        return list;
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -22,8 +23,13 @@ public class loginController {
     @Autowired
     private RegisterService registerService;
 
+    @GetMapping(value = "/login")
+    public String login(){
+        return "front/login";
+    }
     @PostMapping(value = "/checkLogin")
-    public void checkLogin(HttpServletRequest request, HttpServletResponse response){
+    @ResponseBody
+    public String checkLogin(HttpServletRequest request, HttpServletResponse response){
         String phone = request.getParameter("phone");
         String password = request.getParameter("password");
         String result="";
@@ -34,16 +40,14 @@ public class loginController {
                 result = "pass";//密码正确，返回pass
                 request.setAttribute("phone", phone);
             }else{
-                result = "pwdPass";
+                result = "pwdFail";
             }
         }else{
             result = "nameFail";
         }
-        try {
-            response.getWriter().println(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        request.getSession().setAttribute("phone",phone);
+        return result;
+
     }
 
     @GetMapping(value = "checkLogin2")

@@ -12,4 +12,6 @@ public interface ExaminationService {
     public List<Examination> findAll();
 
     public int add(Examination examination);
+
+    public List<Examination> findByIdCard(String idCard);
 }

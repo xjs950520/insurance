@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>报名</title>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/js/jquery.tips.js"></script>
+    <script type="text/javascript">
+        function severCheck(){
+                var phone = $("#phone").val();
+                var experience_card = $("#experience_card").val();
+                var meal_sort = $("#meal_sort").val();
+                $.ajax({
+                    type : "POST",
+                    url : "/joinController/join",
+                    data :{"phone":phone,"experience_card":experience_card,"meal_sort":meal_sort},
+                    success : function(data) {
+                        if (data == "true") {
+                            alert("报名成功！");
+                        }else{
+                            alert("报名失败！");
+                        }
+                    }
+                },"text");
+        }
+    </script>
+</head>
+<body>
+    <h4>报名体检</h4>
+    <form action="#" method="post">
+        <table>
+            <tr>
+                <td>手机号:</td><td><input type="text" name="phone" th:value="${phone}" readonly="readonly" id="phone"/></td>
+            </tr>
+            <tr>
+                <td>体验卡卡号:</td><td><input type="text" name="experience_card" id="experience_card"/></td>
+            </tr>
+
+            <tr>
+                <td>套现类别:</td><td><input type="text" name="meal_sort" id="meal_sort"/></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="提交报名"/></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

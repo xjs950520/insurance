@@ -89,14 +89,17 @@ public class IntroducerController {
 		File excelFile=(File)request.getAttribute("file");
 		System.out.println(excelFile==null);
 		InputStream fileIn = file.getInputStream();*/
-		String testPath = request.getSession().getServletContext().getRealPath("excelImport");
 		//获取文件名
         String fileName = file.getOriginalFilename();
+
+
         //获取文件后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         //文件上传后的路径
-        String path = "D://IdeaProjects//insurance//src//main//resources//static//";
+        /*String path = "D://IdeaProjects//insurance//src//main//resources//static//";*/
+        String path = "D://";
         File dest = new File(path+fileName);
+        /*File dest = new File(path+fileName);*/
         if(!dest.getParentFile().exists()){
             dest.mkdirs();
         }
@@ -132,11 +135,12 @@ public class IntroducerController {
             int rows = 0;
             for(Row r:sht0){
                 //根据Excel表格模板从第五行才是正式数据
-                if(r.getRowNum() < 2){
+                if(r.getRowNum() < 1){
                     continue;
                 }
                 if(r.getCell(1) != null && !r.getCell(1).toString().equals("")){
                     introducer = new Introducer();
+                    String name = r.getCell(1).toString();
                     introducer.setIntro_name(r.getCell(1).toString());
                 }
                 if(r.getCell(2) != null && !r.getCell(2).toString().trim().equals("")){

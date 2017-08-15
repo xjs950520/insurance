@@ -7,6 +7,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,6 +30,34 @@ public class JoinController {
     private JoinService joinService;
 
     private final SimpleDateFormat sdf2=new SimpleDateFormat("yyyy.MM.dd HH:mm");
+
+    //跳转页面
+    @GetMapping(value = "/toJoin")
+    public String toJoin(HttpServletRequest request){
+        String phone = (String) request.getSession().getAttribute("phone");
+        request.setAttribute("phone",phone);
+        return "front/join";
+    }
+
+    @PostMapping(value = "/join")
+    @ResponseBody
+    public String join(HttpServletRequest request){
+        String phone = request.getParameter("phone");
+        String experience_card = request.getParameter("experience_card");
+        String meal_sort = request.getParameter("meal_sort");
+        Register register = new Register();
+        register.setPhone(phone);
+        register.setExperience_card(experience_card);
+        register.setMeal_sort(meal_sort);
+        register.setJoin_status(1);
+        register.setJoin_date(sdf2.format(new Date()));
+        int count = joinService.update(register);
+        String result = "false";
+        if(count>0){
+            result = "true";
+        }
+        return result;
+    }
 
     @GetMapping(value = "/findAll")
     public String findAll(HttpServletRequest request){
@@ -105,4 +134,5 @@ public class JoinController {
         }
         return null;
     }
+
 }

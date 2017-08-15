@@ -78,7 +78,14 @@
             }
 
         });
+        $(".lookup").each(function(){
+            $(this).click(function(){
 
+                var idCard = $(this).parent().parent().children().eq(1).html();
+                alert(idCard);
+                window.location.href="/examinationController/findExaminationByIdCard?idCard="+idCard;
+            });
+        });
     });
 </script>
 <body>
@@ -96,7 +103,7 @@
         <td th:text="${examination.number}"></td>
         <td th:text="${examination.idCard}"></td>
         <td th:text="${examination.check_date}"></td>
-        <td><a style="cursor:pointer;text-decoration: none">查看报告</a></td>
+        <td><a style="cursor:pointer;text-decoration: none" class="lookup">查看报告</a></td>
     </tr>
     </tbody>
 </table>
@@ -122,7 +129,6 @@
             </select><span th:text="${pageSize}" id="content" style="display: none"></span>
         </li>
     </ul>
-
 </div>
 </body>
 </html>

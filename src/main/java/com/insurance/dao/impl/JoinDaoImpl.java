@@ -28,4 +28,11 @@ public class JoinDaoImpl implements JoinDao{
             return list;
         }
     }
+
+    @Override
+    public int update(Register register) {
+        int num = jdbcTemplate.update("update register r SET r.experience_card = ?, r.meal_sort = ?, r.join_status = ?, r.join_date = ? where r.phone = ?",
+                register.getExperience_card(),register.getMeal_sort(),register.getJoin_status(),register.getJoin_date(),register.getPhone());
+        return num;
+    }
 }

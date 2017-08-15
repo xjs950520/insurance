@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,13 +81,22 @@ public class ExaminationController {
     }
     @GetMapping(value = "/import")
     @ResponseBody
-    public String examinationImport(){
+    public String examinationImport(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        String path=request.getSession().getServletContext().getRealPath("images");//test
+
+        //test
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+
         File parentFile = new File("D://image");
         String result="";
+
+        String basePath = "D://image//";//指定路径，所有图片必须全部放在这里
+        //test
         if(parentFile.exists()){
-            File files[]=parentFile.listFiles();
-            Examination examination=null;
-            if(files.length!=0){
+            File files[] = parentFile.listFiles();
+            Examination examination = null;
+            if(files.length != 0){
                 for(File file:files){
                     examination = new Examination();
                     String fileName = file.getName();
@@ -94,17 +105,50 @@ public class ExaminationController {
                     examination.setIdCard(idCard);
                     int checkDate_position = fileName.indexOf(".");
                     String checkDate = fileName.substring(idCard_position+1,checkDate_position);
-                    examination.setCheck_date(checkDate);
+                    String date1 = checkDate.substring(0,4);
+                    String date2 = checkDate.substring(4,6);
+                    String date3 = checkDate.substring(6,8);
+                    String finalCheckDate = date1+"."+date2+"."+date3;
+                    examination.setCheck_date(finalCheckDate);
+
+                    String downLoadPath1 = basePath + file.getName();//获得所下载文件的路径
+                    //获取输入流
+                    bis = new BufferedInputStream(new FileInputStream(downLoadPath1));
+
+                    String upDownPath = path+"//"+idCard; //文件下载后放置目录
+                    File upDownFile = new File(upDownPath);
+                    if(!upDownFile.exists()){
+                        upDownFile.mkdirs();//如果不存在，则创建
+                    }
+                    //获取输出流
+                    bos = new BufferedOutputStream(new FileOutputStream(new File(upDownPath+"//"+fileName)));
+                    String url = "/images/"+idCard+"/"+fileName;//数据库放置位置
+                    examination.setUrl(url);//数据库存放的url设值
                     examinationService.add(examination);
+                    byte[] buff = new byte[2048];
+                    int bytesRead;
+                    while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                        bos.write(buff, 0, bytesRead);
+                    }
+                    //关闭流
+                    bis.close();
+                    bos.close();
                 }
-                result = "2";//导入成功
+                result = "2";
             }else{
                 result = "1";//没有要导入的数据
             }
-
         }else{
-            result = "0";//表示路径不符合要求
+            result = "0";//表示路径不符合要求;
         }
         return result;
+    }
+
+    @GetMapping(value = "/findExaminationByIdCard")
+    public String findExaminationByIdCard(String idCard, HttpServletRequest request){
+        List<Examination> list = examinationService.findByIdCard(idCard);
+        int size = list.size();
+        request.setAttribute("examinations",list);
+        return "showExaminationDetail";
     }
 }

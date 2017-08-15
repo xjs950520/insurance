@@ -9,14 +9,16 @@ import java.util.List;
  */
 public interface RegisterDao {
 
-    public int add(Register register);
+    int add(Register register);//注册
 
-    public int del(Register register);
+    int del(Register register);//删除
 
-    public int update(Register register);
+    int update(Register register);//修改
 
-    public Register getRegisterByPhone(String phone);
+    Register getRegisterByPhone(String phone);//通过手机号查找
 
-    public List<Register> findAll();//注册人查询
+    List<Register> findAll();//注册人查询、
+
+    Register getRegisterByName(String name);//通过注册名查找
 
 }

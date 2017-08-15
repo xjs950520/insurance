@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface JoinDao {
     public List<Register> findAll();//参加体验活动人查询
+    public int update(Register register);
 }

@@ -43,4 +43,9 @@ public class RegisterServiceImpl implements RegisterService {
         return registerDao.findAll();
     }
 
+    @Override
+    public Register getRegisterByName(String name) {
+        return registerDao.getRegisterByName(name);
+    }
+
 }

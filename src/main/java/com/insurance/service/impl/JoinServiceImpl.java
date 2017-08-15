@@ -21,4 +21,9 @@ public class JoinServiceImpl implements JoinService {
     public List<Register> findAll() {
         return joinDao.findAll();
     }
+
+    @Override
+    public int update(Register register) {
+        return joinDao.update(register);
+    }
 }

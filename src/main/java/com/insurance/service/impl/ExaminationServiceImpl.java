@@ -25,4 +25,9 @@ public class ExaminationServiceImpl implements ExaminationService{
     public int add(Examination examination) {
         return examinationDao.add(examination);
     }
+
+    @Override
+    public List<Examination> findByIdCard(String idCard) {
+        return examinationDao.findByIdCard(idCard);
+    }
 }
