@@ -10,6 +10,7 @@
                 var phone = $("#phone").val();
                 var experience_card = $("#experience_card").val();
                 var meal_sort = $("#meal_sort").val();
+                alert("df");
                 $.ajax({
                     type : "POST",
                     url : "/joinController/join",
@@ -17,6 +18,8 @@
                     success : function(data) {
                         if (data == "true") {
                             alert("报名成功！");
+                        }else if(data == "exist"){
+                            alert("已经参加了此活动！");
                         }else{
                             alert("报名失败！");
                         }
@@ -27,7 +30,7 @@
 </head>
 <body>
     <h4>报名体检</h4>
-    <form action="#" method="post">
+    <form action="" method="post">
         <table>
             <tr>
                 <td>手机号:</td><td><input type="text" name="phone" th:value="${phone}" readonly="readonly" id="phone"/></td>
@@ -40,7 +43,7 @@
                 <td>套现类别:</td><td><input type="text" name="meal_sort" id="meal_sort"/></td>
             </tr>
             <tr>
-                <td colspan="2"><input type="submit" value="提交报名"/></td>
+                <td colspan="2"><input type="button" value="提交报名" onclick="severCheck()"/></td>
             </tr>
         </table>
     </form>

@@ -2,6 +2,7 @@ package com.insurance.web;
 
 import com.insurance.bean.Register;
 import com.insurance.service.JoinService;
+import com.insurance.service.RegisterService;
 import com.insurance.util.ExportExcel_Register;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class JoinController {
     @Autowired
     private JoinService joinService;
 
+    @Autowired
+    private RegisterService registerService;
+
     private final SimpleDateFormat sdf2=new SimpleDateFormat("yyyy.MM.dd HH:mm");
 
     //跳转页面
@@ -45,16 +49,21 @@ public class JoinController {
         String phone = request.getParameter("phone");
         String experience_card = request.getParameter("experience_card");
         String meal_sort = request.getParameter("meal_sort");
-        Register register = new Register();
-        register.setPhone(phone);
-        register.setExperience_card(experience_card);
-        register.setMeal_sort(meal_sort);
-        register.setJoin_status(1);
-        register.setJoin_date(sdf2.format(new Date()));
-        int count = joinService.update(register);
         String result = "false";
-        if(count>0){
-            result = "true";
+        Register register = registerService.getRegisterByPhone(phone);
+        if(register.getJoin_status()==1){
+            result = "exist";//表示已报过名
+        }else{
+            register = new Register();
+            register.setPhone(phone);
+            register.setExperience_card(experience_card);
+            register.setMeal_sort(meal_sort);
+            register.setJoin_status(1);
+            register.setJoin_date(sdf2.format(new Date()));
+            int count = joinService.update(register);
+            if(count>0){
+                result = "true";
+            }
         }
         return result;
     }
