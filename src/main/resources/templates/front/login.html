@@ -18,28 +18,28 @@
                         success : function(data) {
                             if (data == "nameFail") {
                                 $("#phone").tips({
-                                    side : 2,
+                                    side : 3,
                                     msg : "用户不存在",
                                     bg : '#FF5080',
-                                    time : 5
+                                    time : 1
                                 });
                                 $("#phone").focus();
                             } else if (data == "pwdFail") {
                                 $("#password").tips({
-                                    side : 2,
+                                    side : 3,
                                     msg : "密码输入有误",
                                     bg : '#FF5080',
-                                    time : 5
+                                    time : 1
                                 });
                                 $("#password").focus();
                             }else if (data == "pass") {
-                                window.location.href = "/joinController/toJoin";
+                                alert("登陆成功");
                             }else {
                                 $("#phone").tips({
                                     side : 1,
                                     msg : "未知错误",
                                     bg : '#FF5080',
-                                    time : 5
+                                    time : 1
                                 });
                                 $("#phone").focus();
                             }
@@ -52,10 +52,10 @@
            function check() {
                 if ($("#phone").val() == "") {
                     $("#phone").tips({
-                        side: 2,
+                        side: 3,
                         msg: '用户名不得为空',
                         bg: '#AE81FF',
-                        time: 3
+                        time: 1
                     });
 
                     $("#phone").focus();
@@ -67,10 +67,10 @@
                 if ($("#password").val() == "") {
 
                     $("#password").tips({
-                        side: 2,
+                        side: 3,
                         msg: '密码不得为空',
                         bg: '#AE81FF',
-                        time: 3
+                        time: 1
                     });
 
                     $("#password").focus();
@@ -96,8 +96,8 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <a href="resetPwd.html" style="display: inline-block;width: 45%;text-align: center;">忘记密码</a>
-                    <a href="register.html" style="display: inline-block;width: 45%;text-align: center;">注册账号</a>
+                    <a href="/loginController/toResetPwd" style="display: inline-block;width: 45%;text-align: center;">忘记密码</a>
+                    <a href="/loginController/toRegister" style="display: inline-block;width: 45%;text-align: center;">注册账号</a>
                 </td>
             </tr>
             <tr>

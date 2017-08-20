@@ -35,12 +35,14 @@ public class RegisterController {
 
     @PostMapping(value = "/add")
     @ResponseBody
-    public int add(HttpServletRequest request, HttpServletResponse response){
+    public String add(HttpServletRequest request, HttpServletResponse response){
+        String result="true";
         String name=request.getParameter("name");
         String phone=request.getParameter("phone");
         String password=request.getParameter("password");
         String intro_phone=request.getParameter("intro_phone");
-        String intro_source=request.getParameter("Intro_source");
+        String intro_source=request.getParameter("intro_source");
+        String code = request.getParameter("code");
         String ct_date=sdf.format(new Date());
         Register register = new Register();
         register.setName(name);
@@ -49,9 +51,81 @@ public class RegisterController {
         register.setIntro_phone(intro_phone);
         register.setIntro_source(intro_source);
         register.setCt_date(ct_date);
-        int i=registerService.add(register);
-        return  i;
+        if(request.getSession()!=null){//session未失效
+            Object num = request.getSession().getAttribute("num");
+            if(num!=null){
+                if(num.toString().equals(code)){//验证码是否一致
+                    if(registerService.getRegisterByPhone(phone) != null){//手机号是否是预留手机号
+                        result = "exist";//已存在
+                    }else{
+                        if(registerService.add(register)>0){
+                            result = "true";
+                        }else{
+                            result = "false";
+                        }
+                    }
+                }else{
+                    result = "errorCode";//验证码输入错误
+                }
+            }else{
+                result = "outTime";
+            }
+        }else{
+            result = "outTime";
+        }
+        return  result;
 
+    }
+    //添加身份证号
+    @PostMapping(value = "/addIdCard")
+    public String addIdCard(HttpServletRequest request){
+        String result="true";
+        String idCard = request.getParameter("idCard");
+        String phone = (String) request.getSession().getAttribute("phone");
+        Register register = new Register();
+        if(registerService.findByIdCard(idCard)==null){
+            registerService.addIdCard(register);
+            result = "true";
+        }else{
+            result = "false";
+        }
+        return result;
+    }
+    @PostMapping(value = "/resetPwd")
+    @ResponseBody
+    public String resetPwd(HttpServletRequest request){
+        String result = "pass";
+        String phone = request.getParameter("phone");
+        String password = request.getParameter("password");
+        String code = request.getParameter("code");
+        Register register = new Register();
+        register.setPhone(phone);
+        register.setPassword(MD5.md5(password));
+        if(request.getSession()!=null){//session未失效
+            Object num = request.getSession().getAttribute("num");//session未失效
+            if(num!=null){
+                if(num.toString().equals(code)){//验证码是否一致
+                    if(registerService.getRegisterByPhone(phone) != null){//手机号是否是预留手机号
+                        if(registerService.updateByPhone(register)>0){//通过手机号修改密码是否成功
+                            result = "pass";
+                        }else{
+                            result = "false";
+                        }
+                    }else{
+                        result = "noExist";
+                    }
+                }else{
+                    result = "errorCode";//验证码输入错误
+                }
+            }else{
+                result = "outTime";
+            }
+        }else{
+            result = "outTime";
+        }
+
+
+        return result;
     }
     @GetMapping(value = "/findAll")
     public String findAll(HttpServletRequest request){
@@ -107,7 +181,7 @@ public class RegisterController {
         request.setAttribute("currentPage",currentPage);
         request.setAttribute("pageSize",pageSize);
         request.getSession().setAttribute("p", pageSize);
-        return "registerManage";
+        return "background/registerManage";
     }
     @GetMapping(value = "/exportExcel")
     @ResponseBody

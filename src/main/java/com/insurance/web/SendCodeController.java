@@ -16,7 +16,7 @@ public class SendCodeController {
 
     @RequestMapping(value = "/sendCode")
     public String sendCode( HttpServletRequest request){
-        String phone="13162235587";
+        String phone=request.getParameter("phone");
         int num = new Random().nextInt(999999);
         String message = "{\"number\":\""+num+"\"}";
 
@@ -27,6 +27,7 @@ public class SendCodeController {
             request.getSession().setMaxInactiveInterval(60);//session的失效时间为60秒
         }
 
-        return apiSendMobile.sendSM(phone, message);
+        return result;
     }
+
 }

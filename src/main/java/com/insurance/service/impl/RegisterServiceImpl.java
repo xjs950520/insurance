@@ -29,13 +29,19 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public int update(Register register) {
-        return 0;
+    public int updateByPhone(Register register) {
+
+        return registerDao.updateByPhone(register);
     }
 
     @Override
     public Register getRegisterByPhone(String phone) {
         return registerDao.getRegisterByPhone(phone);
+    }
+
+    @Override
+    public Register findByIdCard(String idCard) {
+        return registerDao.findByIdCard(idCard);
     }
 
     @Override
@@ -46,6 +52,11 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public Register getRegisterByName(String name) {
         return registerDao.getRegisterByName(name);
+    }
+
+    @Override
+    public int addIdCard(Register register) {
+        return registerDao.addIdCard(register);
     }
 
 }

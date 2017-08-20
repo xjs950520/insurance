@@ -27,6 +27,14 @@ public class loginController {
     public String login(){
         return "front/login";
     }
+    @GetMapping(value = "/toResetPwd")
+    public String toResetPwd(){
+        return "front/resetPwd";
+    }
+    @GetMapping(value = "/toRegister")
+    public String toRegister(){
+        return "front/register";
+    }
     @PostMapping(value = "/checkLogin")
     @ResponseBody
     public String checkLogin(HttpServletRequest request, HttpServletResponse response){

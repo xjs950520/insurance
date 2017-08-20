@@ -73,7 +73,7 @@ public class IntroducerController {
         request.setAttribute("currentPage",currentPage);
         request.setAttribute("pageSize",pageSize);
         request.getSession().setAttribute("p", pageSize);
-        return "introducerManage";
+        return "background/introducerManage";
     }
    /* //进入介绍人导入界面
     @RequestMapping("/toExcelImport")

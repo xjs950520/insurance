@@ -32,8 +32,15 @@ public class RegisterDaoImpl implements RegisterDao{
     }
 
     @Override
-    public int update(Register register) {
-        return 0;
+    public int updateByPhone(Register register) {
+        int count = jdbcTemplate.update("update register r set r.password=? where r.phone = ? ", new Object[]{register.getPassword(),register.getPhone()});
+        return count;
+    }
+
+    @Override
+    public int addIdCard(Register register) {
+        int count = jdbcTemplate.update("update register r set r.idCard=? where r.phone = ? ", new Object[]{register.getIdCard(),register.getPhone()});
+        return count;
     }
 
     @Override
@@ -54,7 +61,17 @@ public class RegisterDaoImpl implements RegisterDao{
             return list;
         }else{
 
-            return list;
+            return null;
+        }
+    }
+
+    @Override
+    public Register findByIdCard(String idCard) {
+        List<Register> list = jdbcTemplate.query("select * from register r where r.idCard=?",new Object[]{idCard}, new BeanPropertyRowMapper(Register.class));
+        if(list != null && list.size() > 0){
+            return list.get(0);
+        }else{
+            return null;
         }
     }
 

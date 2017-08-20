@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>注册</title>
+    <style type="text/css">
+    </style>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/js/jquery.tips.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $("#send").click(function(){
+                var phone = $("#phone").val();//获取手机号
+                var reg = /^1[34578]\d{9}$/;
+                if(!reg.test(phone)){ //校验手机号码格式
+                    alert("请先输入您的正确手机号！");
+                    $("#phone").focus();
+                    return false;
+                }
+
+                /*$.ajax({
+                 url:"/sendCodeController/sendCode",
+                 type:"post",
+                 data:{"phone":phone},
+                 success:function(data){
+                 if(data=="OK"){
+                 get_code_time(); //发送成功则执行get_code_time()函数
+                 }else{
+                 alert("过于频繁");
+                 }
+                 },
+                 error:function(data){
+                 alert("请稍后再试！");
+                 }
+                 },"text");*/
+                get_code_time();
+
+            });
+        });
+        var wait=60;
+        function get_code_time(){
+
+            if(wait==0){
+                $("#send").removeAttr("disabled");//移除获取验证码按钮的disabled属性
+                $("#send").val("获取验证码");
+                wait=60;
+            }else{
+                $("#send").attr("disabled",true);
+                $("#send").val("剩("+ wait +")秒");
+                wait --;
+                window.setTimeout("get_code_time()",1000);
+
+            }
+        }
+        //后台校验
+        function severCheck(){
+            if (check()) {
+                var name = $("#name").val();
+                var phone = $("#phone").val();
+                var password = $("#password").val();
+                var intro_phone = $("#intro_phone").val();
+                var intro_source = $("#intro_source").val();
+                var code = $("#code").val();
+                $.ajax({
+                    type : "POST",
+                    url : "/registerController/add",
+                    data :{"name":name,"phone":phone,"password":password,"intro_phone":intro_phone,"intro_source":intro_source,"code":code},
+                    success : function(data) {
+                        if (data == "outTime") {
+                            $("#code").tips({
+                                side : 3,
+                                msg : "验证码已失效！",
+                                bg : '#FF5080',
+                                time : 1
+                            });
+                            $("#code").focus();
+                        } else if (data == "exist") {
+                            $("#exist").tips({
+                                side : 3,
+                                msg : "手机号已被注册！",
+                                bg : '#FF5080',
+                                time : 1
+                            });
+                            $("#phone").focus();
+                        }else if (data == "true") {
+                            window.location.href = "/loginController/login";
+                        }else {
+                            alert("未知错误");
+                        }
+                    }
+                },"text");
+            }
+        }
+        //客户端校验
+        function check() {
+            if ($("#name").val() == "") {
+
+                $("#name").tips({
+                    side: 3,
+                    msg: '验证码不得为空',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#name").focus();
+                return false;
+            }
+            if ($("#phone").val() == "") {
+                $("#phone").tips({
+                    side: 3,
+                    msg: '手机号不得为空',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#phone").focus();
+                return false;
+            } else {
+                $("#phone").val(jQuery.trim($('#phone').val()));
+            }
+            if ($("#code").val() == "") {
+
+                $("#code").tips({
+                    side: 3,
+                    msg: '验证码不得为空',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#password").focus();
+                return false;
+            }
+
+            if ($("#password").val() == "") {
+
+                $("#password").tips({
+                    side: 3,
+                    msg: '密码不得为空',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#password").focus();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h4>注册</h4>
+    <form action="" method="post">
+        <table style="border-collapse: collapse">
+            <tr>
+                <td>真实姓名*:</td><td><input type="text" name="name" id="name"/></td>
+            </tr>
+            <tr>
+                <td>手机号*:</td><td><input type="text" name="phone" id="phone"/></td>
+            </tr>
+            <tr>
+                <td>验证码*:</td><td><input type="text" name="code" id="code"/><input type="button" id="send" value="发送验证码"/></td>
+            </tr>
+            <tr>
+                <td>登录密码*：</td><td><input type="password" name="password" id="password"/></td>
+            </tr>
+            <tr>
+                <td>推荐人手机号:</td><td><input type="text" name="intro_phone" id="intro_phone"/></td>
+            </tr>
+            <tr>
+               <td>信息来源:</td><td><input type="text" name="intro_source" id="intro_source"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center"><input type="button" value="注册" onclick="severCheck()"/></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

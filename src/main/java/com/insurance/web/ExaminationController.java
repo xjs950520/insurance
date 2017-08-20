@@ -1,14 +1,18 @@
 package com.insurance.web;
 
 import com.insurance.bean.Examination;
+import com.insurance.bean.Register;
 import com.insurance.service.ExaminationService;
+import com.insurance.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -25,6 +29,8 @@ public class ExaminationController {
 
     @Autowired
     private ExaminationService examinationService;
+    @Autowired
+    private RegisterService registerService;
 
     private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy.MM.dd");
 
@@ -77,7 +83,7 @@ public class ExaminationController {
         request.setAttribute("currentPage",currentPage);
         request.setAttribute("pageSize",pageSize);
         request.getSession().setAttribute("p", pageSize);
-        return "examinationManage";
+        return "background/examinationManage";
     }
     @GetMapping(value = "/import")
     @ResponseBody
@@ -149,6 +155,23 @@ public class ExaminationController {
         List<Examination> list = examinationService.findByIdCard(idCard);
         int size = list.size();
         request.setAttribute("examinations",list);
-        return "showExaminationDetail";
+        return "background/showExaminationDetail";
+    }
+    @PostMapping(value = "/lookForExamination")
+    public String lookForExamination(HttpServletRequest request){
+        String phone = (String) request.getSession().getAttribute("phone");
+        if(phone != null && !phone.equals("")){//已登录
+            Register register = registerService.getRegisterByPhone(phone);
+            if(register.getIdCard()==null || register.getIdCard().equals("")){//已登录但未绑定身份证号
+                return "front/addIdCard";
+            }else{//已绑定身份证号
+                String idCard=register.getIdCard();
+                List<Examination> list = examinationService.findByIdCard(idCard);
+                request.setAttribute("examinations",list);
+                return "background/showExaminationDetail";
+            }
+        }else{//未登录
+            return "front/login";
+        }
     }
 }

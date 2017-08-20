@@ -39,8 +39,13 @@ public class JoinController {
     @GetMapping(value = "/toJoin")
     public String toJoin(HttpServletRequest request){
         String phone = (String) request.getSession().getAttribute("phone");
-        request.setAttribute("phone",phone);
-        return "front/join";
+        if(phone==null || phone.equals("")){
+            return "front/login";
+        }else if(phone!=null && !phone.equals("")){
+            request.setAttribute("phone",phone);
+            return "front/join";
+        }
+        return null;
     }
 
     @PostMapping(value = "/join")
@@ -118,7 +123,7 @@ public class JoinController {
         request.setAttribute("currentPage",currentPage);
         request.setAttribute("pageSize",pageSize);
         request.getSession().setAttribute("p", pageSize);
-        return "joinManage";
+        return "background/joinManage";
     }
     @GetMapping(value = "/exportExcel")
     @ResponseBody

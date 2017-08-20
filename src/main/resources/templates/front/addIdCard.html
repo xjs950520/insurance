@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/js/jquery.tips.js"></script>
+    <script type="text/javascript">
+        function severCheck(){
+            if(check){
+                var idCard = $("#idCard").val();
+                $.ajax({
+                    type : "POST",
+                    url : "/registerController/addIdCard",
+                    data :{"idCard":idCard},
+                    success : function(data) {
+                        if (data == "true") {
+                            alert("报名成功！");
+                        }else if(data == "false"){
+                            alert("已经参加了此活动！");
+                        }
+                    }
+                },"text");
+            }
+
+        }
+        //客户端校验
+        function check() {
+            var reg=/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
+            if ($("#idCard").val() == "") {
+
+                $("#idCard").tips({
+                    side: 3,
+                    msg: '身份证不能为空！',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#idCard").focus();
+                return false;
+            }
+            if(!reg.test($("#idCard").val())){
+                $("#idCard").tips({
+                    side: 3,
+                    msg: '请输入正确的身份证号！',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#idCard").focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div>绑定身份证号</div>
+    <form action="" method="post">
+        <table>
+            <tr>
+                <td>身份证号：</td><td><input type="text" id="idCard" name="idCard"/></td>
+            </tr>
+            <tr>
+                <td></td><td><span>绑定身份证号后，才能查看报告</span></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center"><input type="button" value="绑定" onclick="severCheck()"/></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

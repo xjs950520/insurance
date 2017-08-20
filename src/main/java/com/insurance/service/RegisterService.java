@@ -12,10 +12,11 @@ public interface RegisterService {
 
     int del(Register register);
 
-    int update(Register register);
+    int updateByPhone(Register register);
 
     Register getRegisterByPhone(String phone);
-
+    Register findByIdCard(String idCard);//通过身份证号查询
     List<Register> findAll();
     Register getRegisterByName(String name);
+    int addIdCard(Register register);//添加身份证号
 }

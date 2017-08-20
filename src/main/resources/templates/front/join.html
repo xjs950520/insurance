@@ -7,6 +7,7 @@
     <script src="/js/jquery.tips.js"></script>
     <script type="text/javascript">
         function severCheck(){
+            if(check){
                 var phone = $("#phone").val();
                 var experience_card = $("#experience_card").val();
                 var meal_sort = $("#meal_sort").val();
@@ -25,6 +26,26 @@
                         }
                     }
                 },"text");
+            }
+
+        }
+        //客户端校验
+        function check() {
+            if ($("#meal_sort").val() == "") {
+
+                $("#meal_sort").tips({
+                    side: 3,
+                    msg: '验证码不得为空',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#name").focus();
+                return false;
+            }
+
+
+            return true;
         }
     </script>
 </head>

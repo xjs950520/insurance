@@ -60,11 +60,12 @@ public class ApiSendMobile {
         System.out.println(sendSmsResponse.getRequestId());
         System.out.println(sendSmsResponse.getBizId());*/
         String code = sendSmsResponse.getCode();
+        System.out.println("返回的状态码------------------------------------------"+code);
         if(code.equals("isv.MOBILE_NUMBER_ILLEGAL")){
             //非法手机号
         }else if(code.equals("isv.BUSINESS_LIMIT_CONTROL")){
             //操纵过于频繁
         }
-        return sendSmsResponse.getCode();
+        return code;
     }
 }
