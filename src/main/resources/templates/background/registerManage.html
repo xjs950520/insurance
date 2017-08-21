@@ -26,15 +26,6 @@
                 return;
             }
         });
-        /*$("#goPage").click(function(){
-            var pageno=$("#toGoPage").val();
-            if(pageno==""){
-                window.location.href = "/registerController/findAll?pageno=1";
-            }else{
-                window.location.href = "/registerController/findAll?pageno="+pageno;
-            }
-
-        });*/
         $("#goPage").click(function(){
             var pageno = $("#toGoPage").val();
             if(pageno == ""){
@@ -70,21 +61,6 @@
                 return;
             }
         });
-        /*$(".option").click(function(){
-            alert(1);
-            var pageSize = $("#pageSize").val();
-            alert(2);
-            window.location.href = "/registerController/findAll?pageSize="+pageSize;
-        });*/
-        /*$(".option").each(function () {
-            alert(1);
-            $(this).click(function(){
-                alert(1);
-                var pageSize = $("#pageSize").val();
-                alert(2);
-                window.location.href = "/registerController/findAll?pageSize="+pageSize;
-            });
-        });*/
         $("#pageSize").change(function(){
             var pageSize = this.value;
             window.location.href = "/registerController/findAll?pageSize="+pageSize;

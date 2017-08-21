@@ -16,6 +16,7 @@ public class ExaminationServiceImpl implements ExaminationService{
 
     @Autowired
     private ExaminationDao examinationDao;
+
     @Override
     public List<Examination> findAll() {
         return examinationDao.findAll();
@@ -29,5 +30,10 @@ public class ExaminationServiceImpl implements ExaminationService{
     @Override
     public List<Examination> findByIdCard(String idCard) {
         return examinationDao.findByIdCard(idCard);
+    }
+
+    @Override
+    public List<Examination> findByIdCardAndCheckDate(Examination examination) {
+        return examinationDao.findByIdCardAndCheckDate(examination);
     }
 }

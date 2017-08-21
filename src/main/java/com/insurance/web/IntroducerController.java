@@ -134,7 +134,7 @@ public class IntroducerController {
             Introducer introducer = null;
             int rows = 0;
             for(Row r:sht0){
-                //根据Excel表格模板从第五行才是正式数据
+                //根据Excel表格模板从第2行才是正式数据
                 if(r.getRowNum() < 1){
                     continue;
                 }

@@ -18,22 +18,21 @@
                     return false;
                 }
 
-                /*$.ajax({
-                 url:"/sendCodeController/sendCode",
-                 type:"post",
-                 data:{"phone":phone},
-                 success:function(data){
-                 if(data=="OK"){
-                 get_code_time(); //发送成功则执行get_code_time()函数
-                 }else{
-                 alert("过于频繁");
-                 }
-                 },
-                 error:function(data){
-                 alert("请稍后再试！");
-                 }
-                 },"text");*/
-                get_code_time();
+                $.ajax({
+                    url:"/sendCodeController/sendCode",
+                    type:"post",
+                    data:{"phone":phone},
+                    success:function(data){
+                        if(data=="OK"){
+                            get_code_time(); //发送成功则执行get_code_time()函数
+                        }else{
+                            alert("过于频繁");
+                        }
+                    },
+                    error:function(data){
+                        alert("请稍后再试！");
+                    }
+                },"text");
 
             });
         });
@@ -75,7 +74,7 @@
                             });
                             $("#code").focus();
                         } else if (data == "exist") {
-                            $("#exist").tips({
+                            $("#phone").tips({
                                 side : 3,
                                 msg : "手机号已被注册！",
                                 bg : '#FF5080',

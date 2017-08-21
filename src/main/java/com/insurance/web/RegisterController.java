@@ -1,7 +1,9 @@
 package com.insurance.web;
 
+import com.insurance.bean.Introducer;
 import com.insurance.bean.Register;
 import com.insurance.dao.impl.RegisterDaoImpl;
+import com.insurance.service.IntroducerService;
 import com.insurance.service.RegisterService;
 import com.insurance.service.impl.RegisterServiceImpl;
 import com.insurance.util.ExportExcel_Register;
@@ -29,6 +31,9 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
+    @Autowired
+    private IntroducerService introducerService;
+
     private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy.MM.dd");
 
     private final SimpleDateFormat sdf2=new SimpleDateFormat("yyyy.MM.dd HH:mm");
@@ -41,6 +46,16 @@ public class RegisterController {
         String phone=request.getParameter("phone");
         String password=request.getParameter("password");
         String intro_phone=request.getParameter("intro_phone");
+
+        if(!intro_phone.equals("")){//如果推荐信息不为空，数据要添加到推荐人表中
+            Introducer introducer = new Introducer();
+            introducer.setIntro_phone(intro_phone);
+            if(introducerService.findByPhone(introducer).size()>0){//说明推荐人存在
+
+            }else{//说明此推荐人还未存在，添加进去
+                introducerService.add(introducer);
+            }
+        }
         String intro_source=request.getParameter("intro_source");
         String code = request.getParameter("code");
         String ct_date=sdf.format(new Date());
@@ -78,13 +93,16 @@ public class RegisterController {
     }
     //添加身份证号
     @PostMapping(value = "/addIdCard")
+    @ResponseBody
     public String addIdCard(HttpServletRequest request){
         String result="true";
         String idCard = request.getParameter("idCard");
         String phone = (String) request.getSession().getAttribute("phone");
         Register register = new Register();
+        register.setIdCard(idCard);
+        register.setPhone(phone);
         if(registerService.findByIdCard(idCard)==null){
-            registerService.addIdCard(register);
+            int count=registerService.addIdCard(register);
             result = "true";
         }else{
             result = "false";

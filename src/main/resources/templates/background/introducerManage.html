@@ -98,12 +98,9 @@
         });
         $("#pageSize").change(function(){
             var pageSize = this.value;
-            window.location.href = "/registerController/findAll?pageSize="+pageSize;
-        });
-        /*$(".option").click(function(){
-            var pageSize = $("#pageSize").val();
             window.location.href = "/introducerController/findAll?pageSize="+pageSize;
-        });*/
+        });
+
         $("#export").click(function(){
             $("#filter").css({"display":"block"});
             $("#show").css({"display":"block"});

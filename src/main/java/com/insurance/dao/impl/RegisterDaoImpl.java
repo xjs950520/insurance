@@ -1,5 +1,6 @@
 package com.insurance.dao.impl;
 
+import com.insurance.bean.Examination;
 import com.insurance.bean.Register;
 import com.insurance.dao.RegisterDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,12 @@ public class RegisterDaoImpl implements RegisterDao{
     @Override
     public int updateByPhone(Register register) {
         int count = jdbcTemplate.update("update register r set r.password=? where r.phone = ? ", new Object[]{register.getPassword(),register.getPhone()});
+        return count;
+    }
+
+    @Override
+    public int updateByIdCard(Examination examination) {
+        int count = jdbcTemplate.update("update register r set r.join_status=?,r.join_date=?,r.meal_sort=?,r.experience_card=? where r.idCard = ? ", new Object[]{0,"","","",examination.getIdCard()});
         return count;
     }
 

@@ -7,7 +7,7 @@
     <script src="/js/jquery.tips.js"></script>
     <script type="text/javascript">
         function severCheck(){
-            if(check){
+            if(check()){
                 var idCard = $("#idCard").val();
                 $.ajax({
                     type : "POST",
@@ -15,9 +15,16 @@
                     data :{"idCard":idCard},
                     success : function(data) {
                         if (data == "true") {
-                            alert("报名成功！");
+                            alert("绑定成功！");
                         }else if(data == "false"){
-                            alert("已经参加了此活动！");
+                            $("#idCard").tips({
+                                side: 3,
+                                msg: '此身份证号已被使用！',
+                                bg: '#AE81FF',
+                                time: 1
+                            });
+
+                            $("#idCard").focus();
                         }
                     }
                 },"text");
@@ -28,7 +35,6 @@
         function check() {
             var reg=/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
             if ($("#idCard").val() == "") {
-
                 $("#idCard").tips({
                     side: 3,
                     msg: '身份证不能为空！',

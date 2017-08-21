@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(value = "/backgroundController")
 public class BackgroundController {
-    @RequestMapping(value = "/toBack")
-    public  String toBack(){
-        return "background/index1";
+    @RequestMapping(value = "/toIndex")
+    public  String toIndex(){
+        return "background/index";
     }
 }

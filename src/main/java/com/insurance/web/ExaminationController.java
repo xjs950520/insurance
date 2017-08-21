@@ -101,9 +101,11 @@ public class ExaminationController {
         //test
         if(parentFile.exists()){
             File files[] = parentFile.listFiles();
+
             Examination examination = null;
             if(files.length != 0){
                 for(File file:files){
+                    File file1=file;
                     examination = new Examination();
                     String fileName = file.getName();
                     int idCard_position = fileName.indexOf("_");
@@ -116,31 +118,37 @@ public class ExaminationController {
                     String date3 = checkDate.substring(6,8);
                     String finalCheckDate = date1+"."+date2+"."+date3;
                     examination.setCheck_date(finalCheckDate);
+                    List<Examination> slist = examinationService.findByIdCardAndCheckDate(examination);
+                    if(slist.size()==0){//代表没有重复数据
+                        registerService.updateByIdCard(examination);//代表报名体检的人的数据将要被录入，录入后修改其报名状态
+                        String downLoadPath1 = basePath + file.getName();//获得所下载文件的路径
+                        //获取输入流
+                        bis = new BufferedInputStream(new FileInputStream(downLoadPath1));
 
-                    String downLoadPath1 = basePath + file.getName();//获得所下载文件的路径
-                    //获取输入流
-                    bis = new BufferedInputStream(new FileInputStream(downLoadPath1));
-
-                    String upDownPath = path+"//"+idCard; //文件下载后放置目录
-                    File upDownFile = new File(upDownPath);
-                    if(!upDownFile.exists()){
-                        upDownFile.mkdirs();//如果不存在，则创建
+                        String upDownPath = path+"//"+idCard; //文件下载后放置目录
+                        File upDownFile = new File(upDownPath);
+                        if(!upDownFile.exists()){
+                            upDownFile.mkdirs();//如果不存在，则创建
+                        }
+                        //获取输出流
+                        bos = new BufferedOutputStream(new FileOutputStream(new File(upDownPath+"//"+fileName)));
+                        String url = "/images/"+idCard+"/"+fileName;//数据库放置位置
+                        examination.setUrl(url);//数据库存放的url设值
+                        examinationService.add(examination);
+                        byte[] buff = new byte[2048];
+                        int bytesRead;
+                        while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                            bos.write(buff, 0, bytesRead);
+                        }
+                        result = "2";
+                        //关闭流
+                        bis.close();
+                        bos.close();
+                    }else{//存在已经重复录入过得数据
+                        result = "repeat";
                     }
-                    //获取输出流
-                    bos = new BufferedOutputStream(new FileOutputStream(new File(upDownPath+"//"+fileName)));
-                    String url = "/images/"+idCard+"/"+fileName;//数据库放置位置
-                    examination.setUrl(url);//数据库存放的url设值
-                    examinationService.add(examination);
-                    byte[] buff = new byte[2048];
-                    int bytesRead;
-                    while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-                        bos.write(buff, 0, bytesRead);
-                    }
-                    //关闭流
-                    bis.close();
-                    bos.close();
                 }
-                result = "2";
+
             }else{
                 result = "1";//没有要导入的数据
             }
@@ -157,7 +165,7 @@ public class ExaminationController {
         request.setAttribute("examinations",list);
         return "background/showExaminationDetail";
     }
-    @PostMapping(value = "/lookForExamination")
+    @GetMapping(value = "/lookForExamination")
     public String lookForExamination(HttpServletRequest request){
         String phone = (String) request.getSession().getAttribute("phone");
         if(phone != null && !phone.equals("")){//已登录
@@ -167,6 +175,7 @@ public class ExaminationController {
             }else{//已绑定身份证号
                 String idCard=register.getIdCard();
                 List<Examination> list = examinationService.findByIdCard(idCard);
+                int size = list.size();
                 request.setAttribute("examinations",list);
                 return "background/showExaminationDetail";
             }

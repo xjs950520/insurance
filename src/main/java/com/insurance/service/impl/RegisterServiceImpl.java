@@ -1,5 +1,6 @@
 package com.insurance.service.impl;
 
+import com.insurance.bean.Examination;
 import com.insurance.bean.Register;
 import com.insurance.dao.RegisterDao;
 import com.insurance.dao.impl.RegisterDaoImpl;
@@ -37,6 +38,11 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public Register getRegisterByPhone(String phone) {
         return registerDao.getRegisterByPhone(phone);
+    }
+
+    @Override
+    public int updateByIdCard(Examination examination) {
+        return registerDao.updateByIdCard(examination);
     }
 
     @Override

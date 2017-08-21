@@ -35,14 +35,18 @@ public class ExportExcel_Register {
         cell.setCellStyle(style);
 
         cell=row.createCell(3);
-        cell.setCellValue("推荐人");
+        cell.setCellValue("身份证号");
         cell.setCellStyle(style);
 
         cell=row.createCell(4);
-        cell.setCellValue("推荐人手机号");
+        cell.setCellValue("推荐人");
         cell.setCellStyle(style);
 
         cell=row.createCell(5);
+        cell.setCellValue("推荐人手机号");
+        cell.setCellStyle(style);
+
+        cell=row.createCell(6);
         cell.setCellValue("注册时间");
         cell.setCellStyle(style);
 
@@ -91,14 +95,25 @@ public class ExportExcel_Register {
 
                 }
 
+                //身份证号
+                if(datas.getIdCard() !=null && !datas.getIdCard().equals("")){
+                    cell = row.createCell(3);
+                    cell.setCellValue(datas.getIdCard());
+                    cell.setCellStyle(style);
+                }else{
+                    cell = row.createCell(3);
+                    cell.setCellValue("");
+                    cell.setCellStyle(style);
+                }
+
                 //推荐人
                 if(datas.getIntro_name() !=null && !datas.getIntro_name().equals("")){
-                    cell = row.createCell(3);
+                    cell = row.createCell(4);
                     cell.setCellValue(datas.getIntro_name());
                     cell.setCellStyle(style);
 
                 }else{
-                    cell = row.createCell(3);
+                    cell = row.createCell(4);
                     cell.setCellValue("");
                     cell.setCellStyle(style);
 
@@ -106,12 +121,12 @@ public class ExportExcel_Register {
 
                 //推荐人手机号
                 if(datas.getIntro_phone() !=null && !datas.getIntro_phone().equals("")){
-                    cell = row.createCell(4);
+                    cell = row.createCell(5);
                     cell.setCellValue(datas.getIntro_phone());
                     cell.setCellStyle(style);
 
                 }else{
-                    cell = row.createCell(4);
+                    cell = row.createCell(5);
                     cell.setCellValue("");
                     cell.setCellStyle(style);
 
@@ -119,12 +134,12 @@ public class ExportExcel_Register {
 
                 //注册时间
                 if(datas.getCt_date() !=null && !datas.getCt_date().equals("")){
-                    cell = row.createCell(5);
+                    cell = row.createCell(6);
                     cell.setCellValue(datas.getCt_date());
                     cell.setCellStyle(style);
 
                 }else{
-                    cell = row.createCell(5);
+                    cell = row.createCell(6);
                     cell.setCellValue("");
                     cell.setCellStyle(style);
 
@@ -260,24 +275,24 @@ public class ExportExcel_Register {
                 }
                 //推荐人
                 if(datas.getIntro_name() !=null && !datas.getIntro_name().equals("")){
-                    cell = row.createCell(5);
+                    cell = row.createCell(6);
                     cell.setCellValue(datas.getIntro_name());
                     cell.setCellStyle(style);
 
                 }else{
-                    cell = row.createCell(5);
+                    cell = row.createCell(6);
                     cell.setCellValue("");
                     cell.setCellStyle(style);
 
                 }
                 //推荐人手机号
                 if(datas.getIntro_phone() !=null && !datas.getIntro_phone().equals("")){
-                    cell = row.createCell(5);
+                    cell = row.createCell(7);
                     cell.setCellValue(datas.getIntro_phone());
                     cell.setCellStyle(style);
 
                 }else{
-                    cell = row.createCell(5);
+                    cell = row.createCell(7);
                     cell.setCellValue("");
                     cell.setCellStyle(style);
 

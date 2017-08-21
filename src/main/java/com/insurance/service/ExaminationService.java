@@ -9,9 +9,10 @@ import java.util.List;
  */
 public interface ExaminationService {
 
-    public List<Examination> findAll();
+    List<Examination> findAll();
 
-    public int add(Examination examination);
+    int add(Examination examination);
 
-    public List<Examination> findByIdCard(String idCard);
+    List<Examination> findByIdCard(String idCard);
+    List<Examination> findByIdCardAndCheckDate(Examination examination);
 }

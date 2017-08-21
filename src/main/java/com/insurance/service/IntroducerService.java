@@ -12,4 +12,6 @@ public interface IntroducerService {
     public List<Introducer> findAll();
 
     public int add(Introducer introducer);
+
+    public List<Introducer> findByPhone(Introducer introducer);
 }

@@ -9,9 +9,12 @@ import java.util.List;
  */
 public interface ExaminationDao {
 
-    public List<Examination> findAll();//查询所有报告
+    List<Examination> findAll();//查询所有报告
 
-    public int add(Examination examination);//添加
+    int add(Examination examination);//添加
 
-    public List<Examination> findByIdCard(String idCard);//按身份证查询报告
+
+    List<Examination> findByIdCardAndCheckDate(Examination examination);
+
+    List<Examination> findByIdCard(String idCard);//按身份证查询报告
 }

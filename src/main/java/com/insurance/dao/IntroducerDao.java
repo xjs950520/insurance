@@ -11,5 +11,7 @@ public interface IntroducerDao {
 
     public List<Introducer> findAll();
 
+    public List<Introducer> findByPhone(Introducer introducer);
+
     public int add(Introducer introducer);
 }

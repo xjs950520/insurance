@@ -30,6 +30,12 @@ public class IntroducerDaoImpl implements IntroducerDao{
     }
 
     @Override
+    public List<Introducer> findByPhone(Introducer introducer) {
+        List<Introducer> list = jdbcTemplate.query("select * from introducer i where i.intro_phone=?", new Object[]{introducer.getIntro_phone()}, new BeanPropertyRowMapper(Introducer.class));
+        return list;
+    }
+
+    @Override
     public int add(Introducer introducer) {
         int resRow = jdbcTemplate.update("insert into introducer(intro_name, intro_phone) VALUES(?,?) ", new Object[]{
                 introducer.getIntro_name(),introducer.getIntro_phone()

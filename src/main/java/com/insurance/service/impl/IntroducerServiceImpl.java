@@ -27,4 +27,9 @@ public class IntroducerServiceImpl implements IntroducerService {
     public int add(Introducer introducer) {
         return introducerDao.add(introducer);
     }
+
+    @Override
+    public List<Introducer> findByPhone(Introducer introducer) {
+        return introducerDao.findByPhone(introducer);
+    }
 }
