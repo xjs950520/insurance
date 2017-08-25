@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Title</title>
+    <!--<script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/js/jquery.tips.js"></script>
     <script src="/js/jquery-1.8.3.min.js"></script>
     <script src="/js/jquery.tips.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>-->
+    <script src="/js/jquery-1.8.3.min.js"></script>
+    <script src="/js/jquery.tips.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
     <script type="text/javascript">
         function severCheck(){
             if(check()){
@@ -16,6 +23,7 @@
                     success : function(data) {
                         if (data == "true") {
                             alert("绑定成功！");
+                            window.location.href="/examinationController/lookForExamination";
                         }else if(data == "false"){
                             $("#idCard").tips({
                                 side: 3,
@@ -33,6 +41,7 @@
         }
         //客户端校验
         function check() {
+
             var reg=/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
             if ($("#idCard").val() == "") {
                 $("#idCard").tips({
@@ -59,21 +68,91 @@
             return true;
         }
     </script>
+    <style type="text/css">
+        body {
+            padding-top: 90px;
+        }
+        .panel-login {
+            border-color: #ccc;
+            -webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+            -moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+            box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+        }
+
+        .panel-login>.panel-heading a{
+            text-decoration: none;
+            color: #666;
+            font-weight: bold;
+            font-size: 15px;
+            -webkit-transition: all 0.1s linear;
+            -moz-transition: all 0.1s linear;
+            transition: all 0.1s linear;
+        }
+
+        .panel-login>.panel-heading hr{
+            margin-top: 10px;
+            margin-bottom: 0px;
+            clear: both;
+            border: 0;
+            height: 1px;
+            background-image: -webkit-linear-gradient(left,rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15),rgba(0, 0, 0, 0));
+            background-image: -moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+            background-image: -ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+            background-image: -o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+        }
+        .panel-login input[type="text"],.panel-login input[type="email"],.panel-login input[type="password"] {
+            height: 45px;
+        }
+
+        .btn-register {
+            background-color: #1CB94E;
+            outline: none;
+            color: #fff;
+            font-size: 14px;
+            height: auto;
+            font-weight: normal;
+            padding: 14px 0;
+            text-transform: uppercase;
+            border-color: #1CB94A;
+        }
+        .btn-register:hover,
+        .btn-register:focus {
+            color: #fff;
+            background-color: #1CA347;
+            border-color: #1CA347;
+        }
+    </style>
 </head>
 <body>
-    <div>绑定身份证号</div>
-    <form action="" method="post">
-        <table>
-            <tr>
-                <td>身份证号：</td><td><input type="text" id="idCard" name="idCard"/></td>
-            </tr>
-            <tr>
-                <td></td><td><span>绑定身份证号后，才能查看报告</span></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align:center"><input type="button" value="绑定" onclick="severCheck()"/></td>
-            </tr>
-        </table>
-    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-login">
+                    <div class="panel-heading">
+                        <h4 style="text-align: center;font-weight: bold;color: #8ab2c9">绑定身份证号</h4>
+                    </div>
+                    <div class="panel-body">
+                        <form id="register-form" action="" method="post" role="form">
+
+                            <div class="form-group">
+                                <input type="text" name="idCard" id="idCard" tabindex="1" class="form-control" placeholder="身份证号"/>
+                            </div>
+                            <div class="form-group">
+                                <a>*绑定身份证号后，才能查看报告</a>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="绑定" onclick="severCheck()"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

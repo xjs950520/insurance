@@ -79,6 +79,7 @@
                             window.location.href="/examinationController/findAll";
                         }else if(data=="repeat"){
                             alert("存在已经录入过的数据，不过已帮你自动过滤！");
+                            window.location.href="/examinationController/findAll";
                         }
                     }
                 });
@@ -89,8 +90,17 @@
             $(this).click(function(){
 
                 var idCard = $(this).parent().parent().children().eq(1).html();
-                alert(idCard);
-                window.location.href="/examinationController/findExaminationByIdCard?idCard="+idCard;
+                var check_date = $(this).parent().parent().children().eq(2).html();
+                $.ajax({
+                    type : "POST",
+                    url : "/examinationController/findExaminationByIdCardAndCheckDate",
+                    data :{"idCard":idCard,"check_date":check_date},
+                    success : function(data) {
+                        if(data == "true"){
+                            window.location.href="/examinationController/lookDetails";
+                        }
+                    }
+                });
             });
         });
     });

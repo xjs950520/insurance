@@ -23,6 +23,7 @@
                     type:"post",
                     data:{"phone":phone},
                     success:function(data){
+                        alert(data);
                         if(data=="OK"){
                             get_code_time(); //发送成功则执行get_code_time()函数
                         }else{

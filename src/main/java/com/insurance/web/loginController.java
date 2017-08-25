@@ -1,17 +1,16 @@
 package com.insurance.web;
 
+
 import com.insurance.bean.Register;
 import com.insurance.service.RegisterService;
 import com.insurance.util.MD5;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 /**
  * Created by xujunshuai on 2017/8/7.
@@ -41,19 +40,21 @@ public class loginController {
         String phone = request.getParameter("phone");
         String password = request.getParameter("password");
         String result="";
+        Object mark = request.getSession().getAttribute("mark");
         Register register = registerService.getRegisterByPhone(phone);
         if(register != null){
-            result = "namePass";
+            result = "namePass"+mark;
             if(register.getPassword().equals(MD5.md5(password))){
-                result = "pass";//密码正确，返回pass
+                result = "pass"+mark;//密码正确，返回pass
+                request.getSession().setAttribute("phone",phone);
                 request.setAttribute("phone", phone);
             }else{
-                result = "pwdFail";
+                result = "pwdFail"+mark;
             }
         }else{
-            result = "nameFail";
+            result = "nameFail"+mark;
         }
-        request.getSession().setAttribute("phone",phone);
+        System.out.println(result);
         return result;
 
     }

@@ -36,7 +36,7 @@ public class ExaminationDaoImpl implements ExaminationDao{
 
     @Override
     public List<Examination> findByIdCardAndCheckDate(Examination examination) {
-        List<Examination> list = jdbcTemplate.query("select * from examination e where e.idCard=? and e.check_date=?", new Object[]{examination.getIdCard(), examination.getCheck_date()}, new BeanPropertyRowMapper(Examination.class));
+        List<Examination> list = jdbcTemplate.query("select * from examination e where e.idCard=? and e.check_date=? order by e.check_date DESC " , new Object[]{examination.getIdCard(), examination.getCheck_date()}, new BeanPropertyRowMapper(Examination.class));
         return list;
     }
 

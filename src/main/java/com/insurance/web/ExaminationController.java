@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServlet;
@@ -157,15 +158,35 @@ public class ExaminationController {
         }
         return result;
     }
-
-    @GetMapping(value = "/findExaminationByIdCard")
+    @PostMapping(value = "/findExaminationByIdCardAndCheckDate")
+    @ResponseBody
+    public String findExaminationByIdCardAndCheckDate(String idCard, String check_date, HttpServletRequest request){
+        Examination examination = new Examination();
+        examination.setCheck_date(check_date);
+        examination.setIdCard(idCard);
+        List<Examination> list = examinationService.findByIdCardAndCheckDate(examination);
+        request.getSession().setAttribute("examinations",list);
+        String result="";
+        if(list.size()>0){
+          result="true";
+        }else{
+           result="false";
+        }
+        return  result;
+    }
+    @GetMapping(value = "/lookDetails")
+    public String lookDetail(HttpServletRequest request){
+        request.setAttribute("examinations",request.getSession().getAttribute("examinations"));
+        return "background/showExaminationDetail";
+    }
+    /*@GetMapping(value = "/findExaminationByIdCard")
     public String findExaminationByIdCard(String idCard, HttpServletRequest request){
         List<Examination> list = examinationService.findByIdCard(idCard);
         int size = list.size();
         request.setAttribute("examinations",list);
         return "background/showExaminationDetail";
-    }
-    @GetMapping(value = "/lookForExamination")
+    }*/
+    /*@GetMapping(value = "/lookForExamination")
     public String lookForExamination(HttpServletRequest request){
         String phone = (String) request.getSession().getAttribute("phone");
         if(phone != null && !phone.equals("")){//已登录
@@ -180,7 +201,32 @@ public class ExaminationController {
                 return "background/showExaminationDetail";
             }
         }else{//未登录
+            request.getSession().setAttribute("mark",2);
+            return "front/login";
+        }
+    }*/
+    @GetMapping(value = "/lookForExamination")
+    public String showExaminationList(HttpServletRequest request){
+        String phone = (String) request.getSession().getAttribute("phone");
+        if(phone != null && !phone.equals("")){//已登录
+            Register register = registerService.getRegisterByPhone(phone);
+            if(register.getIdCard()==null || register.getIdCard().equals("")){//已登录但未绑定身份证号
+                return "front/addIdCard";
+            }else{//已绑定身份证号
+                String idCard=register.getIdCard();
+                String name=registerService.findByIdCard(idCard).getName();
+                List<Examination> list = examinationService.findByIdCard(idCard);
+                for(Examination examination:list){
+                    examination.setName(name);
+                }
+                int size = list.size();
+                request.setAttribute("examinations",list);
+                return "/front/showExaminationList";
+            }
+        }else{//未登录
+            request.getSession().setAttribute("mark",2);
             return "front/login";
         }
     }
+
 }

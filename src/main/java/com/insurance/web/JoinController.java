@@ -40,6 +40,7 @@ public class JoinController {
     public String toJoin(HttpServletRequest request){
         String phone = (String) request.getSession().getAttribute("phone");
         if(phone==null || phone.equals("")){
+            request.getSession().setAttribute("mark",1);
             return "front/login";
         }else if(phone!=null && !phone.equals("")){
             request.setAttribute("phone",phone);

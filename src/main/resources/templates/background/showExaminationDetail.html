@@ -2,11 +2,27 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
     <title>查看报告</title>
 </head>
 <body>
-<span th:each="examination:${examinations}">
-    <img th:src="${examination.url}"/>
-</span>
+<!--<div style="background-color: "><h3 style="text-align: center">报告详情</h3></div>-->
+<div class="container">
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span><img src="/return/return3.png" onclick="window.history.go(-1);" style="width:25px;height: 25px;"/></span>
+                <h4 style="text-align: center;font-weight: bold;display: inline-block;width: 87%;">
+                    报告详情
+                </h4>
+            </div>
+            <div th:each="examination:${examinations}" style="text-align: center">
+                <img th:src="${examination.url}"/>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

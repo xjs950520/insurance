@@ -8,6 +8,7 @@ public class Examination {
     private int id;
     private String idCard;
     private String check_date;
+    private String name;//假字段，体检人姓名
 
     private String url;//图片路径
 
@@ -54,5 +55,12 @@ public class Examination {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
