@@ -97,7 +97,7 @@
                     data :{"idCard":idCard,"check_date":check_date},
                     success : function(data) {
                         if(data == "true"){
-                            window.location.href="/examinationController/lookDetails";
+                            window.location.href="/examinationController/lookDetails?mark="+1;
                         }
                     }
                 });

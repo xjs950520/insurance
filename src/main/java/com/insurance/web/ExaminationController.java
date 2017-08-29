@@ -5,11 +5,10 @@ import com.insurance.bean.Register;
 import com.insurance.service.ExaminationService;
 import com.insurance.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,9 @@ public class ExaminationController {
     private ExaminationService examinationService;
     @Autowired
     private RegisterService registerService;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy.MM.dd");
 
@@ -86,19 +89,33 @@ public class ExaminationController {
         request.getSession().setAttribute("p", pageSize);
         return "background/examinationManage";
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<?> getFile(@PathVariable String filename) {
+        try {
+            return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("/home/backend/image/", filename).toString()));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping(value = "/import")
     @ResponseBody
     public String examinationImport(HttpServletRequest request, HttpServletResponse response) throws Exception{
-        String path=request.getSession().getServletContext().getRealPath("images");//test
+        String path= "/home/backend/download";
+//        String path=request.getSession().getServletContext().getRealPath("images");//test
 
         //test
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
 
-        File parentFile = new File("D://image");
+        File parentFile = new File("/home/backend");
+//        File parentFile = new File("D://image");
         String result="";
 
-        String basePath = "D://image//";//指定路径，所有图片必须全部放在这里
+        String basePath = "/home/backend/";//指定路径，所有图片必须全部放在这里
+//        String basePath = "D://image//";//指定路径，所有图片必须全部放在这里
         //test
         if(parentFile.exists()){
             File files[] = parentFile.listFiles();
@@ -177,7 +194,13 @@ public class ExaminationController {
     @GetMapping(value = "/lookDetails")
     public String lookDetail(HttpServletRequest request){
         request.setAttribute("examinations",request.getSession().getAttribute("examinations"));
-        return "background/showExaminationDetail";
+        if(request.getParameter("mark").equals("1")){
+            return "background/showExaminationDetail";
+        }else if(request.getParameter("mark").equals("2")){
+            return "front/showExaminationDetail";
+        }
+
+       return  null;
     }
     /*@GetMapping(value = "/findExaminationByIdCard")
     public String findExaminationByIdCard(String idCard, HttpServletRequest request){
@@ -221,7 +244,7 @@ public class ExaminationController {
                 }
                 int size = list.size();
                 request.setAttribute("examinations",list);
-                return "/front/showExaminationList";
+                return "front/showExaminationList";
             }
         }else{//未登录
             request.getSession().setAttribute("mark",2);

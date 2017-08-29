@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,8 @@ public class IntroducerController {
 
     @Autowired
     private IntroducerService introducerService;
+
+    private ResourceLoader resourceLoader;
 
     @RequestMapping(value = "/findAll")
     public String findAll(HttpServletRequest request){
@@ -92,12 +95,11 @@ public class IntroducerController {
 		//获取文件名
         String fileName = file.getOriginalFilename();
 
-
         //获取文件后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         //文件上传后的路径
         /*String path = "D://IdeaProjects//insurance//src//main//resources//static//";*/
-        String path = "D://";
+        String path = "/home/backend/image/";
         File dest = new File(path+fileName);
         /*File dest = new File(path+fileName);*/
         if(!dest.getParentFile().exists()){
@@ -113,7 +115,6 @@ public class IntroducerController {
             dir.mkdirs();
         }*/
         //MultipartFile自带的解析方法
-
         //获得下载文件的输入流
         String putFileName=path+"/"+fileName;//获得上传文件的路径
         File existFile=new File(putFileName);

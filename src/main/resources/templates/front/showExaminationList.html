@@ -21,7 +21,7 @@
                             data :{"idCard":idCard,"check_date":check_date},
                             success : function(data) {
                                 if(data == "true"){
-                                    window.location.href="/examinationController/lookDetails";
+                                    window.location.href="/examinationController/lookDetails?mark="+2;
                                 }
                             }
                         });
@@ -76,5 +76,15 @@
                 </div>
             </div>
         </div>
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+            <div class="btn-group btn-group-justified" role="group">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default"><a href="/joinController/toJoin"> 体验报名</a></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default" style="background-color: #2aabd2;"><a href="/examinationController/lookForExamination">查看报告</a></button>
+                </div>
+            </div>
+        </nav>
     </body>
 </html>
