@@ -29,11 +29,11 @@
         $("#goPage").click(function(){
             var pageno = $("#toGoPage").val();
             if(pageno == ""){
-                window.location.href = "/registerController/findAll?pageno=1";
+                window.location.href = "/joinController/findAll?pageno=1";
             }else if(0>=pageno){
                 return;
             }else if($("#totalPage").html()>=pageno){
-                window.location.href = "/registerController/findAll?pageno="+pageno;
+                window.location.href = "/joinController/findAll?pageno="+pageno;
             }else if(0>=$("#totalPage").html()){
                 return;
             }else{
@@ -63,7 +63,7 @@
         });
         $("#pageSize").change(function(){
             var pageSize = this.value;
-            window.location.href = "/registerController/findAll?pageSize="+pageSize;
+            window.location.href = "/joinController/findAll?pageSize="+pageSize;
         });
         /*$(".option").click(function(){
             var pageSize = $("#pageSize").val();
@@ -82,7 +82,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>序号</th><th>姓名</th><th>手机号</th><th>报名时间</th><th>套餐</th><th>体验卡卡号</th><th>推荐人</th><th>推荐人手机号</th>
+            <th>序号</th><th>姓名</th><th>手机号</th><th>报名时间</th><th>套餐</th><th>体验卡卡号</th><th>推荐人</th><th>推荐人工号</th>
         </tr>
         </thead>
         <tbody>

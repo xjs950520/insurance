@@ -45,6 +45,7 @@ public class loginController {
         if(register != null){
             result = "namePass"+mark;
             if(register.getPassword().equals(MD5.md5(password))){
+//                request.getSession().setMaxInactiveInterval(30 * 60);
                 result = "pass"+mark;//密码正确，返回pass
                 request.getSession().setAttribute("phone",phone);
                 request.setAttribute("phone", phone);

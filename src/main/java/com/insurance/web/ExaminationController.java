@@ -4,8 +4,12 @@ import com.insurance.bean.Examination;
 import com.insurance.bean.Register;
 import com.insurance.service.ExaminationService;
 import com.insurance.service.RegisterService;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.xml.ws.WebServiceClient;
 import java.io.*;
+import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,85 +102,46 @@ public class ExaminationController {
     public ResponseEntity<?> getFile(@PathVariable String filename) {
         try {
             return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("/home/backend/image/", filename).toString()));
+            /*return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("D:/image/", filename).toString()));*/
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping(value = "/import")
+    @PostMapping(value = "/import")
     @ResponseBody
-    public String examinationImport(HttpServletRequest request, HttpServletResponse response) throws Exception{
-        String path= "/home/backend/download";
-//        String path=request.getSession().getServletContext().getRealPath("images");//test
+    public String examinationImport(@RequestParam("file") MultipartFile file) throws Exception{
+        String fileName = file.getOriginalFilename();
 
-        //test
-        BufferedInputStream bis = null;
-        BufferedOutputStream bos = null;
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        String path = "/home/backend/image/";
+        /*String path="D:/image/";*/
+        File dest = new File(path+fileName);
 
-        File parentFile = new File("/home/backend");
-//        File parentFile = new File("D://image");
-        String result="";
-
-        String basePath = "/home/backend/";//指定路径，所有图片必须全部放在这里
-//        String basePath = "D://image//";//指定路径，所有图片必须全部放在这里
-        //test
-        if(parentFile.exists()){
-            File files[] = parentFile.listFiles();
-
-            Examination examination = null;
-            if(files.length != 0){
-                for(File file:files){
-                    File file1=file;
-                    examination = new Examination();
-                    String fileName = file.getName();
-                    int idCard_position = fileName.indexOf("_");
-                    String idCard = fileName.substring(0,idCard_position);
-                    examination.setIdCard(idCard);
-                    int checkDate_position = fileName.indexOf(".");
-                    String checkDate = fileName.substring(idCard_position+1,checkDate_position);
-                    String date1 = checkDate.substring(0,4);
-                    String date2 = checkDate.substring(4,6);
-                    String date3 = checkDate.substring(6,8);
-                    String finalCheckDate = date1+"."+date2+"."+date3;
-                    examination.setCheck_date(finalCheckDate);
-                    List<Examination> slist = examinationService.findByIdCardAndCheckDate(examination);
-                    if(slist.size()==0){//代表没有重复数据
-                        registerService.updateByIdCard(examination);//代表报名体检的人的数据将要被录入，录入后修改其报名状态
-                        String downLoadPath1 = basePath + file.getName();//获得所下载文件的路径
-                        //获取输入流
-                        bis = new BufferedInputStream(new FileInputStream(downLoadPath1));
-
-                        String upDownPath = path+"//"+idCard; //文件下载后放置目录
-                        File upDownFile = new File(upDownPath);
-                        if(!upDownFile.exists()){
-                            upDownFile.mkdirs();//如果不存在，则创建
-                        }
-                        //获取输出流
-                        bos = new BufferedOutputStream(new FileOutputStream(new File(upDownPath+"//"+fileName)));
-                        String url = "/images/"+idCard+"/"+fileName;//数据库放置位置
-                        examination.setUrl(url);//数据库存放的url设值
-                        examinationService.add(examination);
-                        byte[] buff = new byte[2048];
-                        int bytesRead;
-                        while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-                            bos.write(buff, 0, bytesRead);
-                        }
-                        result = "2";
-                        //关闭流
-                        bis.close();
-                        bos.close();
-                    }else{//存在已经重复录入过得数据
-                        result = "repeat";
-                    }
-                }
-
-            }else{
-                result = "1";//没有要导入的数据
+        Examination examination = new Examination();
+        int idCard_position = fileName.indexOf("_");
+        String idCard = fileName.substring(0,idCard_position);
+        examination.setIdCard(idCard);
+        int checkDate_position = fileName.indexOf(".");
+        String checkDate = fileName.substring(idCard_position+1,checkDate_position);
+        String date1 = checkDate.substring(0,4);
+        String date2 = checkDate.substring(4,6);
+        String date3 = checkDate.substring(6,8);
+        String finalCheckDate = date1+"."+date2+"."+date3;
+        examination.setCheck_date(finalCheckDate);
+        List<Examination> slist = examinationService.findByIdCardAndCheckDate(examination);
+        if(slist.size()==0){
+            registerService.updateByIdCard(examination);
+            if(!dest.getParentFile().exists()){
+                dest.mkdirs();
             }
+            file.transferTo(dest);
+            examination.setUrl(fileName);
+            examinationService.add(examination);
         }else{
-            result = "0";//表示路径不符合要求;
+            return "2";
         }
-        return result;
+        return "1";
     }
     @PostMapping(value = "/findExaminationByIdCardAndCheckDate")
     @ResponseBody
@@ -185,11 +153,85 @@ public class ExaminationController {
         request.getSession().setAttribute("examinations",list);
         String result="";
         if(list.size()>0){
-          result="true";
+          /*result="true";*/
+          result=list.get(0).getUrl();
         }else{
            result="false";
         }
         return  result;
+    }
+    @PostMapping(value="/toDownFile")
+    @ResponseBody
+    public String toDownFile(String idCard, String check_date, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute("idCard",idCard);
+        session.setAttribute("check_date",check_date);
+        return "true";
+    }
+    @GetMapping(value = "/downFile")
+    @ResponseBody
+    public String downFile(HttpServletRequest request,HttpServletResponse response){
+
+        Examination examination = new Examination();
+        HttpSession session = request.getSession();
+        if(session!=null){
+            String idCard= (String) session.getAttribute("idCard");
+            String check_date = (String) session.getAttribute("check_date");
+            if(idCard!=null && check_date!=null){
+                examination.setCheck_date(check_date);
+                examination.setIdCard(idCard);
+                List<Examination> list = examinationService.findByIdCardAndCheckDate(examination);
+                request.getSession().setAttribute("examinations",list);
+                if(list.size()>0){
+                    String fileName=list.get(0).getUrl();
+                    FileInputStream in=null;
+                    OutputStream out=null;
+                    try{
+                        fileName = new String(fileName.getBytes("iso8859-1"),"UTF-8");
+                        //本地测试
+//                        String path="D:/";
+                        String path="/home/backend/image/";
+                        response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+                        in = new FileInputStream(path + "/" + fileName);
+                        out = response.getOutputStream();
+                        byte buffer[] = new byte[1024];
+                        int len = 0;
+                        while((len=in.read(buffer))>0){
+                            out.write(buffer, 0, len);
+                        }
+
+                        /*HttpHeaders headers = new HttpHeaders();
+                        File file = new File(path+"/"+fileName);
+                        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                        headers.setContentDispositionFormData("attachment", new String(fileName.getBytes("utf-8"), "ISO8859-1"));
+                        return new ResponseEntity<byte[]>(FileUtils.,
+                                headers, HttpStatus.CREATED);*/
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally {
+                        if(in!=null){
+                            try {
+                                in.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if(out!=null){
+                            try {
+                                out.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+
+        return  null;
     }
     @GetMapping(value = "/lookDetails")
     public String lookDetail(HttpServletRequest request){
@@ -202,32 +244,7 @@ public class ExaminationController {
 
        return  null;
     }
-    /*@GetMapping(value = "/findExaminationByIdCard")
-    public String findExaminationByIdCard(String idCard, HttpServletRequest request){
-        List<Examination> list = examinationService.findByIdCard(idCard);
-        int size = list.size();
-        request.setAttribute("examinations",list);
-        return "background/showExaminationDetail";
-    }*/
-    /*@GetMapping(value = "/lookForExamination")
-    public String lookForExamination(HttpServletRequest request){
-        String phone = (String) request.getSession().getAttribute("phone");
-        if(phone != null && !phone.equals("")){//已登录
-            Register register = registerService.getRegisterByPhone(phone);
-            if(register.getIdCard()==null || register.getIdCard().equals("")){//已登录但未绑定身份证号
-                return "front/addIdCard";
-            }else{//已绑定身份证号
-                String idCard=register.getIdCard();
-                List<Examination> list = examinationService.findByIdCard(idCard);
-                int size = list.size();
-                request.setAttribute("examinations",list);
-                return "background/showExaminationDetail";
-            }
-        }else{//未登录
-            request.getSession().setAttribute("mark",2);
-            return "front/login";
-        }
-    }*/
+
     @GetMapping(value = "/lookForExamination")
     public String showExaminationList(HttpServletRequest request){
         String phone = (String) request.getSession().getAttribute("phone");
@@ -251,5 +268,8 @@ public class ExaminationController {
             return "front/login";
         }
     }
-
+    @RequestMapping(value="/many")
+    public String many(){
+        return "front/many";
+    }
 }

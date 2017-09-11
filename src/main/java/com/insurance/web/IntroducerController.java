@@ -86,19 +86,13 @@ public class IntroducerController {
 
     @PostMapping(value="/excelImport")
     @ResponseBody
-    public String excelImport(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile file) throws IOException {
-		/*System.out.println(request.getParameter("file"));
-		request.setAttribute("file",request.getParameter("file"));
-		File excelFile=(File)request.getAttribute("file");
-		System.out.println(excelFile==null);
-		InputStream fileIn = file.getInputStream();*/
+    public String excelImport(@RequestParam("file") MultipartFile file) throws IOException {
 		//获取文件名
         String fileName = file.getOriginalFilename();
 
-        //获取文件后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        //文件上传后的路径
+        //文件上传后的路径-->本地
         /*String path = "D://IdeaProjects//insurance//src//main//resources//static//";*/
+        //文件上传后的路径-->服务器
         String path = "/home/backend/image/";
         File dest = new File(path+fileName);
         /*File dest = new File(path+fileName);*/
@@ -107,15 +101,6 @@ public class IntroducerController {
         }
         file.transferTo(dest);
 
-        //文件上传
-        /*String path=request.getSession().getServletContext().getRealPath("excelImport");
-        String fileName = file.getOriginalFilename();
-        File dir=new File(path,fileName);
-        if(!dir.exists()){
-            dir.mkdirs();
-        }*/
-        //MultipartFile自带的解析方法
-        //获得下载文件的输入流
         String putFileName=path+"/"+fileName;//获得上传文件的路径
         File existFile=new File(putFileName);
         String totalRs="1";//1:录入成功 2:失败
@@ -128,10 +113,7 @@ public class IntroducerController {
                 wb0=new XSSFWorkbook(fileIn);
             }
             Sheet sht0=wb0.getSheetAt(0);//获取Excel文档中第一个表单
-           /* Sheet sht0=wb0.getSheet("数据");//根据表单名字获得指定表单*/
-			/*System.out.println("总行数------"+sht0.getLastRowNum());
-			System.out.println("列数-------------"+sht0.getRow(5).getPhysicalNumberOfCells());*/
-            //对Sheet的每一行进行迭代
+
             Introducer introducer = null;
             int rows = 0;
             for(Row r:sht0){
@@ -149,6 +131,9 @@ public class IntroducerController {
                     String phone = bd.toPlainString();
                     introducer.setIntro_phone(phone);
                 }
+                if(introducerService.findByPhone(introducer).size()>0){
+                    continue;
+                }
                 rows = introducerService.add(introducer);
             }
             if(rows < 0){
@@ -160,13 +145,12 @@ public class IntroducerController {
             }
 
         }
-        response.setCharacterEncoding("utf-8");
-        try {
+        return totalRs;
+        /*try {
             response.getWriter().println(totalRs);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-        return null;
+        }*/
     }
 }

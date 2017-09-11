@@ -6,23 +6,37 @@
     <title>报名</title>
     <!--<script src="/js/jquery-1.8.3.min.js"></script>
     <script src="/js/jquery.tips.js"></script>-->
-    <script src="/js/jquery-1.8.3.min.js"></script>
+    <link rel="stylesheet" href="/css/lrtk.css" />
+    <script src="/js/jquery.min.js"></script>
+    <!--<script src="/js/jquery-1.8.3.min.js"></script>-->
     <script src="/js/jquery.tips.js"></script>
+    <script src="/js/jquery.imgbox.pack.js"></script>
+
+
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
     <script type="text/javascript">
+
+        $(document).ready(function() {
+            $("#example1-1").imgbox({
+                'zoomOpacity'	: true,
+                'alignment'		: 'center'
+            });
+
+        });
+    </script>
+    <script type="text/javascript">
         function severCheck(){
-            if(check){
+            if(check()){
                 var phone = $("#phone").val();
                 var experience_card = $("#experience_card").val();
-                var meal_sort = $("#meal_sort").val();
-                alert("df");
+//                var meal_sort = $("#meal_sort").val();
                 $.ajax({
                     type : "POST",
                     url : "/joinController/join",
-                    data :{"phone":phone,"experience_card":experience_card,"meal_sort":meal_sort},
+                    data :{"phone":phone,"experience_card":experience_card},
                     success : function(data) {
                         if (data == "true") {
-                            alert("报名成功！");
+                            alert("报名成功！\n请耐心等待，稍后会有工作人员与您取得联系！");
                         }else if(data == "exist"){
                             alert("已经参加了此活动！");
                         }else{
@@ -34,17 +48,64 @@
 
         }
         //客户端校验
-        function check() {
-            if ($("#meal_sort").val() == "") {
-
+        /*function check() {
+            if ($("#meal_sort").val() == "选择套餐") {
                 $("#meal_sort").tips({
                     side: 3,
-                    msg: '验证码不得为空',
+                    msg: '请选择套餐类别',
                     bg: '#AE81FF',
                     time: 1
                 });
 
-                $("#name").focus();
+                $("#meal_sort").focus();
+                return false;
+            }
+
+
+            return true;
+        }*/
+        function check() {
+            var reg = /^\d{n}$/;
+            if ($("#experience_card").val() == "") {
+                $("#experience_card").tips({
+                    side: 3,
+                    msg: '请填写体验卡卡号',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#experience_card").focus();
+                return false;
+            }
+            if(reg.test($("#experience_card").val())){
+                alert($("#experience_card").val().length);
+                $("#experience_card").tips({
+                    side: 3,
+                    msg: '请填写正确体验卡卡号',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+                $("#experience_card").focus();
+                return false;
+            }
+            if($("#experience_card").val().length!=5){
+                $("#experience_card").tips({
+                    side: 3,
+                    msg: '请填写正确体验卡卡号',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+                $("#experience_card").focus();
+                return false;
+            }
+            if(0>=parseInt($("#experience_card").val())){
+                $("#experience_card").tips({
+                    side: 3,
+                    msg: '请填写正确体验卡卡号',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+                $("#experience_card").focus();
                 return false;
             }
 
@@ -105,7 +166,57 @@
             background-color: #1CA347;
             border-color: #1CA347;
         }
+        .button {
+            display: inline-block;
+            border: none;
+            color: #fff;
+            text-decoration: none;
+            background-color: #f9c869;
+            padding: 15px 14px;
+            width:100%;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 600;
+            /*margin-top: 60px;*/  /*delete*/
+            letter-spacing: 3px;
+            -webkit-border-radius: 2px;
+            border-radius: 2px;
+            text-align: center;
+            position: relative;
+            outline: none;
+            -webkit-transition: background-color .1s ease;
+            -o-transition: background-color .1s ease;
+            transition: background-color .1s ease; }
+        .button::after {
+            -webkit-transition: background-color .2s ease;
+            -o-transition: background-color .2s ease;
+            transition: background-color .2s ease;
+            position: absolute;
+            content: '';
+            height: 4px;
+            bottom: 0;
+            width: 100%;
+            background-color: #5f4004;
+            opacity: .18;
+            -webkit-border-bottom-left-radius: 2px;
+            border-bottom-left-radius: 2px;
+            -webkit-border-bottom-right-radius: 2px;
+            border-bottom-right-radius: 2px;
+            left: 0; }
+        .button:focus, .button:hover {
+            text-decoration: none;
+            color: #fff; }
+        .button:hover {
+            background-color: #fad182; }
+        .button:hover::after {
+            opacity: .22; }
+        .button:active {
+            background-color: #f8bf50; }
+        .button:active::after {
+            opacity: .32; }
     </style>
+
+
 </head>
 <body>
     <div class="container">
@@ -113,26 +224,43 @@
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-login">
                     <div class="panel-heading">
-                        <h4 style="text-align: center;font-weight: bold;color: #8ab2c9">报名体检</h4>
+                        <h4 style="text-align: center;font-weight: bold;color: #8ab2c9">报名体验</h4>
                     </div>
                     <div class="panel-body">
                         <form id="register-form" action="" method="post" role="form">
-
+                            <div class="form-group">
+                                <input type="text" name="name" id="name" tabindex="1" class="form-control" placeholder="姓名" readonly="readonly" th:value="${name}"/>
+                            </div>
                             <div class="form-group">
                                 <input type="text" name="phone" id="phone" tabindex="1" class="form-control" placeholder="手机号" readonly="readonly" th:value="${phone}"/>
                             </div>
 
                             <div class="form-group">
-                                <input type="text" name="experience_card" id="experience_card" tabindex="2" class="form-control" placeholder="体检卡号"/>
+                                <input type="text" name="experience_card" id="experience_card" tabindex="2" class="form-control" placeholder="体检卡卡号"/>
                             </div>
                             <div class="form-group">
-                                <input type="text" name="meal_sort" id="meal_sort" tabindex="2" class="form-control" placeholder="套餐类别"/>
+                                <!--<input type="text" name="meal_sort" id="meal_sort" tabindex="2" class="form-control" placeholder="套餐类别"/>-->
+                                <a href="/images/check.png" id="example1-1">
+
+                                    <input type="text" name="meal_sort" id="meal_sort" tabindex="2" class="form-control" placeholder="点击查看套餐" disabled="disabled"/>
+                                    <img src="" alt="" tabindex="2" />
+                                <!--<select name="meal_sort" id="meal_sort" tabindex="2" class="form-control" style="height:45px;color: #8b9aa3">
+                                    <option th:value="套餐查看" id="rm">套餐查看</option>
+                                    &lt;!&ndash;<option th:value="选择套餐" id="rm">选择套餐</option>&ndash;&gt;
+                                    &lt;!&ndash;<option th:value="vip全套餐">vip全套餐</option>
+                                    <option th:value="基础套餐">基础套餐</option>
+                                    <option th:value="心血管套餐">心血管套餐</option>
+                                    <option th:value="轻盈体质套餐">轻盈体质套餐</option>
+                                    <option th:value="顺畅呼吸套餐">顺畅呼吸套餐</option>
+                                    <option th:value="养生补钙套餐">养生补钙套餐</option>&ndash;&gt;
+
+                                </select><--></a>
                             </div>
 
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="确定" onclick="severCheck()"/>
+                                        <input type="button" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="确认预约" onclick="severCheck()"/>
                                     </div>
                                 </div>
                             </div>
@@ -145,10 +273,12 @@
     <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="btn-group btn-group-justified" role="group">
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default" style="background-color: #2aabd2;"><a href="/joinController/toJoin"> 体验报名</a></button>
+                <!--<a href="/joinController/toJoin"><button type="button" class="btn btn-default"> 健康小屋报名体验作</button></a>-->
+                <a href="/joinController/toJoin"><button type="button" class="button" style="background-color: #0b6cbc;"> 健康小屋报名体验</button></a>
             </div>
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default"><a href="/examinationController/lookForExamination">查看报告</a></button>
+                <!--<a href="/examinationController/lookForExamination" ><button type="button" class="btn btn-default" style="background-color: #2aabd2;">报告查看与下载</button></a>-->
+                <a href="/examinationController/lookForExamination" ><button type="button" class="button" style="background-color: #8b9aa3;">报告查看与下载</button></a>
             </div>
         </div>
     </nav>

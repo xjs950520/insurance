@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <title>Title</title>
+        <title>查看报告</title>
         <script src="/js/jquery-1.8.3.min.js"></script>
         <script src="/js/jquery.tips.js"></script>
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
@@ -20,8 +20,27 @@
                             url : "/examinationController/findExaminationByIdCardAndCheckDate",
                             data :{"idCard":idCard,"check_date":check_date},
                             success : function(data) {
-                                if(data == "true"){
-                                    window.location.href="/examinationController/lookDetails?mark="+2;
+//                                if(data == "true"){
+//                                    window.location.href="/examinationController/lookDetails?mark="+2;
+//                                }
+                                window.location.href="/examinationController/"+data;
+                            }
+                        });
+                    });
+                });
+                $(".lookup2").each(function(){
+                    $(this).click(function(){
+
+                        var idCard = $(this).parent().parent().children().eq(1).html();
+                        var check_date = $(this).parent().parent().children().eq(2).html();
+                        $.ajax({
+                            type : "POST",
+                            url : "/examinationController/toDownFile",
+                            data :{"idCard":idCard,"check_date":check_date},
+                            success : function(data) {
+                                if(data=="true"){
+                                    window.location.href="/examinationController/downFile?parameter=null";
+
                                 }
                             }
                         });
@@ -47,6 +66,60 @@
                 border-bottom-width: 0;
             }
 
+
+
+            .button {
+                display: inline-block;
+                border: none;
+                color: #fff;
+                text-decoration: none;
+                background-color: #f9c869;
+                padding: 15px 14px;
+                width:100%;
+                font-size: 13px;
+                text-transform: uppercase;
+                font-weight: 600;
+                /*margin-top: 60px;*/  /*delete*/
+                letter-spacing: 3px;
+                -webkit-border-radius: 2px;
+                border-radius: 2px;
+                text-align: center;
+                position: relative;
+                outline: none;
+                -webkit-transition: background-color .1s ease;
+                -o-transition: background-color .1s ease;
+                transition: background-color .1s ease; }
+            .button::after {
+                -webkit-transition: background-color .2s ease;
+                -o-transition: background-color .2s ease;
+                transition: background-color .2s ease;
+                position: absolute;
+                content: '';
+                height: 4px;
+                bottom: 0;
+                width: 100%;
+                background-color: #5f4004;
+                opacity: .18;
+                -webkit-border-bottom-left-radius: 2px;
+                border-bottom-left-radius: 2px;
+                -webkit-border-bottom-right-radius: 2px;
+                border-bottom-right-radius: 2px;
+                left: 0; }
+            .button:focus, .button:hover {
+                text-decoration: none;
+                color: #fff; }
+            .button:hover {
+                background-color: #fad182; }
+            .button:hover::after {
+                opacity: .22; }
+            .button:active {
+                background-color: #f8bf50; }
+            .button:active::after {
+                opacity: .32; }
+
+
+
+
         </style>
     </head>
     <body>
@@ -61,7 +134,7 @@
                     <table class="table table-fixed">
                         <thead>
                         <tr>
-                            <th class="col-xs-3">姓名</th><th class="col-xs-7">日期</th><th class="col-xs-2">操纵</th>
+                            <th class="col-xs-3">姓名</th><th class="col-xs-7">日期</th><th class="col-xs-2">操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -69,7 +142,7 @@
                             <td class="col-xs-2" th:text="${examination.name}">1</td>
                             <td class="col-xs-2" th:text="${examination.idCard}" style="display: none">1</td>
                             <td class="col-xs-7" th:text="${examination.check_date}">Mike Adams</td>
-                            <td class="col-xs-3" style="padding-left:14px;"><a class="lookup">查看详情</a></td>
+                            <td class="col-xs-3" style="padding-left: 12px;"><a class="lookup">查看详情</a><!--|<a class="lookup2">下载</a>--></td>
                         </tr>
                         </tbody>
                     </table>
@@ -79,10 +152,12 @@
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="btn-group btn-group-justified" role="group">
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-default"><a href="/joinController/toJoin"> 体验报名</a></button>
+                    <!--<a href="/joinController/toJoin"><button type="button" class="btn btn-default"> 健康小屋报名体验作</button></a>-->
+                    <a href="/joinController/toJoin"><button type="button" class="button" style="background-color: #8b9aa3;"> 健康小屋报名体验</button></a>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-default" style="background-color: #2aabd2;"><a href="/examinationController/lookForExamination">查看报告</a></button>
+                    <!--<a href="/examinationController/lookForExamination" ><button type="button" class="btn btn-default" style="background-color: #2aabd2;">报告查看与下载</button></a>-->
+                    <a href="/examinationController/lookForExamination" ><button type="button" class="button" style="background-color: #0b6cbc;">体检报告查看</button></a>
                 </div>
             </div>
         </nav>

@@ -64,11 +64,11 @@
         $("#goPage").click(function(){
             var pageno = $("#toGoPage").val();
             if(pageno == ""){
-                window.location.href = "/registerController/findAll?pageno=1";
+                window.location.href = "/introducerController/findAll?pageno=1";
             }else if(0>=pageno){
                 return;
             }else if($("#totalPage").html()>=pageno){
-                window.location.href = "/registerController/findAll?pageno="+pageno;
+                window.location.href = "/introducerController/findAll?pageno="+pageno;
             }else if(0>=$("#totalPage").html()){
                 return;
             }else{
@@ -172,7 +172,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>序号</th><th>姓名</th><th>手机号</th>
+            <th>序号</th><th>姓名</th><th>工号</th>
         </tr>
         </thead>
         <tbody>

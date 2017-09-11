@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -61,9 +61,7 @@
                         alert("请稍后再试！");
                     }
                 },"text");
-
             });
-
         });
         var wait=60;
         function get_code_time(){
@@ -85,6 +83,7 @@
         //登录
             //后台校验
            function severCheck(){
+
                 if (check()) {
                     var phone = $("#phone").val();
                     var password = $("#password").val();
@@ -109,23 +108,20 @@
                                     time : 1
                                 });
                                 $("#password").focus();
-                            }else if (data.indexOf("pass")!=-1) {
-                                if(data.indexOf("1")!=-1){
-                                    window.location.href="/joinController/toJoin";
-                                }else if(data.indexOf("2")!=-1){
+                            }else if (data.indexOf("pass1")!=-1) {
+                                /*if(data.indexOf("1")!=-1){*/
+                                    window.location.href="/joinController/toJoin?parameter=null";
+                                /*}else if(data.indexOf("2")!=-1){
+                                    alert(2);
                                     window.location.href="/examinationController/lookForExamination";
-                                }
-                            }else {
-                                $("#phone").tips({
-                                    side : 1,
-                                    msg : "未知错误",
-                                    bg : '#FF5080',
-                                    time : 1
-                                });
-                                $("#phone").focus();
+                                    alert(2);
+                                }*/
+                            }else if(data.indexOf("pass2")!=-1){
+                                window.location.href="/examinationController/lookForExamination?parameter=null";//微信浏览器使用location时，须带上参数
+
                             }
                         }
-                    },"text");
+                    });
                 }
             }
 
@@ -166,7 +162,7 @@
             if (r_check()) {
                 var name = $("#r_name").val();
                 var phone = $("#r_phone").val();
-                var password = $("#password").val();
+                var password = $("#r_password").val();
                 var intro_phone = $("#intro_phone").val();
                 var intro_source = $("#intro_source").val();
                 var code = $("#code").val();
@@ -206,7 +202,7 @@
 
                 $("#r_name").tips({
                     side: 3,
-                    msg: '用户名不得为空',
+                    msg: '姓名不得为空',
                     bg: '#AE81FF',
                     time: 1
                 });
@@ -250,6 +246,41 @@
                 });
 
                 $("#r_password").focus();
+                return false;
+            }
+            if ($("#repassword").val() == "") {
+
+                $("#repassword").tips({
+                    side: 3,
+                    msg: '确认密码不得为空',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#repassword").focus();
+                return false;
+            }
+            if ($("#repassword").val() != $("#r_password").val()) {
+
+                $("#repassword").tips({
+                    side: 3,
+                    msg: '请与设置的密码保持一致！',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#repassword").focus();
+                return false;
+            }
+            if ($("#intro_source").val() == "信息来源") {
+                $("#intro_source").tips({
+                    side: 3,
+                    msg: '请选择信息来源',
+                    bg: '#AE81FF',
+                    time: 1
+                });
+
+                $("#intro_source").focus();
                 return false;
             }
 
@@ -404,7 +435,7 @@
                                 </form>
                                 <form id="register-form" action="" method="post" role="form" style="display: none;">
                                     <div class="form-group">
-                                        <input type="text" name="r_name" id="r_name" tabindex="1" class="form-control" placeholder="用户名"/>
+                                        <input type="text" name="r_name" id="r_name" tabindex="1" class="form-control" placeholder="真实姓名"/>
                                     </div>
                                     <div class="form-group">
                                         <input type="text" name="r_phone" id="r_phone" tabindex="1" class="form-control" placeholder="手机号"/>
@@ -417,11 +448,20 @@
                                         <input type="password" name="r_password" id="r_password" tabindex="2" class="form-control" placeholder="密码"/>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" name="intro_phone" id="intro_phone" tabindex="1" class="form-control" placeholder="推荐人手机号"/>
+                                        <input type="password" name="repassword" id="repassword" tabindex="2" class="form-control" placeholder="确认密码"/>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" name="intro_source" id="intro_source" tabindex="2" class="form-control" placeholder="信息来源"/>
+                                        <!--<input type="text" name="intro_source" id="intro_source" tabindex="2" class="form-control" placeholder="信息来源"/>-->
+                                        <select name="intro_source" id="intro_source" tabindex="2" class="form-control" style="height:45px;color: #8b9aa3">
+                                            <option th:value="信息来源" id="rm">信息来源</option>
+                                            <option th:value="朋友介绍">朋友介绍</option>
+                                            <option th:value="太保邀约">太保邀约</option>
+                                        </select>
                                     </div>
+                                    <div class="form-group">
+                                        <input type="text" name="intro_phone" id="intro_phone" tabindex="1" class="form-control" placeholder="推荐人工号"/>
+                                    </div>
+
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-sm-6 col-sm-offset-3">

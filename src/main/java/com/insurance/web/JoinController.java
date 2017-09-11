@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +44,9 @@ public class JoinController {
             request.getSession().setAttribute("mark",1);
             return "front/login";
         }else if(phone!=null && !phone.equals("")){
+            Register register = registerService.getRegisterByPhone(phone);
+            String name= register.getName();
+            request.setAttribute("name",name);
             request.setAttribute("phone",phone);
             return "front/join";
         }
@@ -54,7 +58,12 @@ public class JoinController {
     public String join(HttpServletRequest request){
         String phone = request.getParameter("phone");
         String experience_card = request.getParameter("experience_card");
-        String meal_sort = request.getParameter("meal_sort");
+        String meal_sort = null;
+        if(Integer.parseInt(experience_card)>200){
+            meal_sort = "其他套餐";
+        }else if(200>=Integer.parseInt(experience_card) && Integer.parseInt(experience_card)>=1){
+            meal_sort = "vip套餐";
+        }
         String result = "false";
         Register register = registerService.getRegisterByPhone(phone);
         if(register.getJoin_status()==1){
@@ -136,6 +145,8 @@ public class JoinController {
         ExportExcel_Register exportExcel_register = new ExportExcel_Register();
         try {
             HSSFWorkbook wb = exportExcel_register.getJoinRegisterWb(list);
+            File file=new File("");
+
 
             String dateName = sdf2.format(new Date()).trim();
             String fileName = dateName.substring(0, 4) + dateName.substring(5, 7) + dateName.substring(8, 10) + dateName.substring(11, 13) + dateName.substring(14, 16);
