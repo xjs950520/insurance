@@ -166,34 +166,37 @@
                 var intro_phone = $("#intro_phone").val();
                 var intro_source = $("#intro_source").val();
                 var code = $("#code").val();
-                $.ajax({
-                    type : "POST",
-                    url : "/registerController/add",
-                    data :{"name":name,"phone":phone,"password":password,"intro_phone":intro_phone,"intro_source":intro_source,"code":code},
-                    success : function(data) {
-                        if (data == "outTime") {
-                            $("#code").tips({
-                                side : 3,
-                                msg : "验证码已失效！",
-                                bg : '#FF5080',
-                                time : 1
-                            });
-                            $("#code").focus();
-                        } else if (data == "exist") {
-                            $("#r_phone").tips({
-                                side : 3,
-                                msg : "手机号已被注册！",
-                                bg : '#FF5080',
-                                time : 1
-                            });
-                            $("#r_phone").focus();
-                        }else if (data == "true") {
-                            window.location.href = "/loginController/login";
-                        }else {
-                            alert("未知错误");
+                if(confirm("姓名："+name+"\n手机号："+phone)){
+                    $.ajax({
+                        type : "POST",
+                        url : "/registerController/add",
+                        data :{"name":name,"phone":phone,"password":password,"intro_phone":intro_phone,"intro_source":intro_source,"code":code},
+                        success : function(data) {
+                            if (data == "outTime") {
+                                $("#code").tips({
+                                    side : 3,
+                                    msg : "验证码已失效！",
+                                    bg : '#FF5080',
+                                    time : 1
+                                });
+                                $("#code").focus();
+                            } else if (data == "exist") {
+                                $("#r_phone").tips({
+                                    side : 3,
+                                    msg : "手机号已被注册！",
+                                    bg : '#FF5080',
+                                    time : 1
+                                });
+                                $("#r_phone").focus();
+                            }else if (data == "true") {
+                                window.location.href = "/loginController/login";
+                            }else {
+                                alert("未知错误");
+                            }
                         }
-                    }
-                },"text");
+                    },"text");
+                }
+
             }
         }
         //客户端校验

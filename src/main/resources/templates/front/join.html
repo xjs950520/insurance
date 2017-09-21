@@ -66,50 +66,50 @@
         }*/
         function check() {
             var reg = /^\d{n}$/;
-            if ($("#experience_card").val() == "") {
-                $("#experience_card").tips({
-                    side: 3,
-                    msg: '请填写体验卡卡号',
-                    bg: '#AE81FF',
-                    time: 1
-                });
+            if(!$("#receive").attr("checked")){
+                if ($("#experience_card").val() == "") {
+//                alert($("#receive").attr("checked"));
+                    $("#experience_card").tips({
+                        side: 3,
+                        msg: '请填写体验卡卡号',
+                        bg: '#AE81FF',
+                        time: 1
+                    });
 
-                $("#experience_card").focus();
-                return false;
+                    $("#experience_card").focus();
+                    return false;
+                }
+                if(reg.test($("#experience_card").val())){
+                    $("#experience_card").tips({
+                        side: 3,
+                        msg: '请填写正确体验卡卡号',
+                        bg: '#AE81FF',
+                        time: 1
+                    });
+                    $("#experience_card").focus();
+                    return false;
+                }
+                if($("#experience_card").val().length!=7){
+                    $("#experience_card").tips({
+                        side: 3,
+                        msg: '请填写正确体验卡卡号',
+                        bg: '#AE81FF',
+                        time: 1
+                    });
+                    $("#experience_card").focus();
+                    return false;
+                }
+                if(0>=parseInt($("#experience_card").val())){
+                    $("#experience_card").tips({
+                        side: 3,
+                        msg: '请填写正确体验卡卡号',
+                        bg: '#AE81FF',
+                        time: 1
+                    });
+                    $("#experience_card").focus();
+                    return false;
+                }
             }
-            if(reg.test($("#experience_card").val())){
-                alert($("#experience_card").val().length);
-                $("#experience_card").tips({
-                    side: 3,
-                    msg: '请填写正确体验卡卡号',
-                    bg: '#AE81FF',
-                    time: 1
-                });
-                $("#experience_card").focus();
-                return false;
-            }
-            if($("#experience_card").val().length!=5){
-                $("#experience_card").tips({
-                    side: 3,
-                    msg: '请填写正确体验卡卡号',
-                    bg: '#AE81FF',
-                    time: 1
-                });
-                $("#experience_card").focus();
-                return false;
-            }
-            if(0>=parseInt($("#experience_card").val())){
-                $("#experience_card").tips({
-                    side: 3,
-                    msg: '请填写正确体验卡卡号',
-                    bg: '#AE81FF',
-                    time: 1
-                });
-                $("#experience_card").focus();
-                return false;
-            }
-
-
             return true;
         }
     </script>
@@ -237,6 +237,9 @@
 
                             <div class="form-group">
                                 <input type="text" name="experience_card" id="experience_card" tabindex="2" class="form-control" placeholder="体检卡卡号"/>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="receive"/><span style="margin-left: 4px;">暂时未收到邀请卡</span>
                             </div>
                             <div class="form-group">
                                 <!--<input type="text" name="meal_sort" id="meal_sort" tabindex="2" class="form-control" placeholder="套餐类别"/>-->

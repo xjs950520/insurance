@@ -104,6 +104,7 @@
 
                 var idCard = $(this).parent().parent().children().eq(1).html();
                 var check_date = $(this).parent().parent().children().eq(2).html();
+                var paramas = "1";
                 $.ajax({
                     type : "POST",
                     url : "/examinationController/findExaminationByIdCardAndCheckDate",
@@ -112,7 +113,7 @@
                        /* if(data == "true"){
                             window.location.href="/examinationController/lookDetails?mark="+1;
                         }*/
-                        window.location.href="/examinationController/"+data;
+                        window.location.href="/examinationController/downPdf?pdf="+data;
                     }
                 });
             });

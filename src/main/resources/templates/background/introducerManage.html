@@ -47,6 +47,17 @@
             z-index: 1002;
             overflow: auto;
         }
+        .flowplayer.is-mouseout .fp-timeline {
+            height: 0;
+        }
+       /* .m{
+            width: 640px;
+            height: 264px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 100px;
+            border:1px solid red;
+        }*/
     </style>
 
 
@@ -105,10 +116,21 @@
             $("#filter").css({"display":"block"});
             $("#show").css({"display":"block"});
         });
+        $(".flowplayer").click(function(){
+            alert($(".fp-elapsed").html());
+            alert(flowplayer.version);
+            var api = flowplayer();
+            alert("是否开始播放"+api.ready);
 
+            var currentPos=api.ready?api.video.time:0;
+            alert("当前播放时间"+currentPos);
+            alert($(".fp-buffer").css("display"));
+
+        });
     });
 </script>
 <script type="text/javascript">
+
     function change(){
         $("#excel").val($("#lefile").val());
         var fileName = "";
@@ -164,7 +186,18 @@
         $("#filter").css({"display":"none"});
         $("#show").css({"display":"none"});
     }
+
 </script>
+
+
+<!-- include flowplayer -->
+<script src="/js/flowplayer.js"></script>
+<link rel="stylesheet" href="/css/skin.css"/>
+<!--视频插件video-->
+<script src="/js/videojs-ie8.min.js"></script>
+<script src="/js/video.min.js"></script>
+
+<link href="/css/video-js.css" rel="stylesheet"/>
 <body>
     <div style="overflow: auto;height: 60px;border-bottom: 1px solid silver">
         <input type="button" value="上传推荐人" id="export" style="margin-top: 20px;width: 95px;" class="btn"/>
@@ -183,6 +216,85 @@
         </tr>
         </tbody>
     </table>
+
+
+    <!--<div class="flowplayer" data-ratio="0.4167">
+        <video>
+               <source type="video/webm" src="https://edge.flowplayer.org/bauhaus.webm"/>
+            <source type="video/mp4" src="/video/bauhaus.mp4"/>
+            &lt;!&ndash;<source type="video/mp4" src="https://www.uhealth-online.com.cn:8080/home/backend/video/bauhaus.mp4">&ndash;&gt;
+        </video>
+    </div>-->
+
+    <!--<div class="m">
+        <video id="my-video" class="video-js vjs-big-play-centered" controls="auto" width="640" height="264"
+               poster="MY_VIDEO_POSTER.jpg" data-setup="{}">
+            <source src="/video/bauhaus.mp4" type="video/mp4"/>
+            <source src="http://vjs.zencdn.net/v/oceans.webm" type="video/webm"/>
+            <source src="http://vjs.zencdn.net/v/oceans.ogv" type="video/ogg"/>
+            &lt;!&ndash;<p class="vjs-no-js">
+              To view this video please enable JavaScript, and consider upgrading to a web browser that
+              <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>&ndash;&gt;
+        </video>
+        &lt;!&ndash;<script type="text/javascript">
+            var myPlayer = videojs('my-video');
+            myPlayer.ready(function(){
+                var myPlayer = this;
+                myPlayer.play();
+                myPlayer.pause();
+                myPlayer.enterFullScreen();
+            });
+        </script>&ndash;&gt;
+        <script type="text/javascript">
+            var myPlayer = videojs('my-video');
+
+            myPlayer.on("pause", function(){
+               if(myPlayer.currentTime()==myPlayer.duration()){
+                   $("div[role='slider']").css("display","block");
+               };
+
+
+
+            });
+
+
+                myPlayer.on("firstplay", function(){
+                    $("div[role='slider']").css("display","none");
+
+                });
+
+
+
+
+
+            /*myPlayer.on("seeked", function(){
+                alert("dfdf");
+                return false;
+
+
+            });
+            myPlayer.on("seeking", function(){
+
+                return false;
+
+
+            });*/
+
+
+            $("button[title='Fullscreen']").toggle(
+                function(){
+                    myPlayer.width(window.innerWidth);
+                    myPlayer.height(window.innerHeight);
+                },
+                function () {
+                    myPlayer.width(640);
+                    myPlayer.height(264);
+                }
+            );
+        </script>
+    </div>-->
+
     <div class="pagination">
 
         <ul>

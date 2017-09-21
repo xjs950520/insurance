@@ -59,11 +59,16 @@ public class JoinController {
         String phone = request.getParameter("phone");
         String experience_card = request.getParameter("experience_card");
         String meal_sort = null;
-        if(Integer.parseInt(experience_card)>200){
-            meal_sort = "其他套餐";
-        }else if(200>=Integer.parseInt(experience_card) && Integer.parseInt(experience_card)>=1){
-            meal_sort = "vip套餐";
+        if(experience_card.equals("")){
+            meal_sort = "";
+        }else{
+            if(Integer.parseInt(experience_card)>200){
+                meal_sort = "其他套餐";
+            }else if(200>=Integer.parseInt(experience_card) && Integer.parseInt(experience_card)>=1){
+                meal_sort = "vip套餐";
+            }
         }
+
         String result = "false";
         Register register = registerService.getRegisterByPhone(phone);
         if(register.getJoin_status()==1){

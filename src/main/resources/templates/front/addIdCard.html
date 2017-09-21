@@ -16,26 +16,30 @@
         function severCheck(){
             if(check()){
                 var idCard = $("#idCard").val();
-                $.ajax({
-                    type : "POST",
-                    url : "/registerController/addIdCard",
-                    data :{"idCard":idCard},
-                    success : function(data) {
-                        if (data == "true") {
-                            alert("绑定成功！");
-                            window.location.href="/examinationController/lookForExamination";
-                        }else if(data == "false"){
-                            $("#idCard").tips({
-                                side: 3,
-                                msg: '此身份证号已被使用！',
-                                bg: '#AE81FF',
-                                time: 1
-                            });
+                if(confirm("身份证号为："+idCard)){
+                    $.ajax({
+                        type : "POST",
+                        url : "/registerController/addIdCard",
+                        data :{"idCard":idCard},
+                        success : function(data) {
+                            if (data == "true") {
+                                alert("绑定成功！");
+                                window.location.href="/examinationController/lookForExamination";
+                            }else if(data == "false"){
+                                $("#idCard").tips({
+                                    side: 3,
+                                    msg: '此身份证号已被使用！',
+                                    bg: '#AE81FF',
+                                    time: 1
+                                });
 
-                            $("#idCard").focus();
+                                $("#idCard").focus();
+                            }
                         }
-                    }
-                },"text");
+                    },"text");
+                }
+
+
             }
 
         }

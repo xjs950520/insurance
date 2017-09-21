@@ -4,6 +4,9 @@ import com.insurance.bean.Examination;
 import com.insurance.bean.Register;
 import com.insurance.service.ExaminationService;
 import com.insurance.service.RegisterService;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
@@ -16,11 +19,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.WebServiceClient;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
@@ -97,14 +102,92 @@ public class ExaminationController {
         return "background/examinationManage";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{filename:.+}")
+    @RequestMapping(method = RequestMethod.GET, /*value = "/{filename:.+}",*/value="/downPdf",produces = "application/pdf")
     @ResponseBody
-    public ResponseEntity<?> getFile(@PathVariable String filename) {
-        try {
+    public ResponseEntity<?> getFile(/*@PathVariable String filename,*/HttpServletRequest request) {
+        String filename=request.getParameter("pdf");
+        /*if(filename.indexOf("pdf")!=-1){
+            try {
+//            filename = filename+".jpg";
+//           filename="412728199505263257_20170829.jpg";
             return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("/home/backend/image/", filename).toString()));
-            /*return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("D:/image/", filename).toString()));*/
+//                return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("D:/image/", filename).toString()));
+            } catch (Exception e) {
+                return ResponseEntity.notFound().build();
+            }
+        }else{
+            filename=filename.substring(0,filename.indexOf("."));
+            try {
+//                InputStream is = new FileInputStream("D:/image/" + filename+".pdf");
+                InputStream is = new FileInputStream("/home/backend/image/" + filename+".pdf");
+                PDDocument pdf = PDDocument.load(is);
+                int actSize = pdf.getNumberOfPages();
+                List<BufferedImage> piclist = new ArrayList<BufferedImage>();
+                for (int i = 0; i < actSize; i++) {
+                    BufferedImage image = new PDFRenderer(pdf).renderImageWithDPI(i, 130, ImageType.RGB);
+                    piclist.add(image);
+                }
+
+//                yPic(piclist, "D:/imgs/" + filename + ".jpg");
+                yPic(piclist, "/home/backend/image/" + filename + ".jpg");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
+
+
+        try {
+//            filename = filename+".jpg";
+//           filename="412728199505263257_20170829.jpg";
+
+            return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("/home/backend/image/", filename).toString()));
+//           return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("D:/imgs/", filename+".jpg").toString()));
+//            return ResponseEntity.ok(resourceLoader.getResource("file:" + Paths.get("D:/image/", filename).toString()));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    public static void yPic(List<BufferedImage> piclist,String outPath){
+        if(piclist == null || piclist.size()<=0){
+            System.out.println("图片数组为空！");
+            return;
+        }
+        try{
+            int height=0,//总高度
+            width=0,//总宽度
+            _height=0,//临时高度，或保存偏移高度
+            __height=0,//临时高度，主要保存每个高度
+            picNum = piclist.size();//图片数量
+            int[] heightArray = new int[picNum];
+            BufferedImage buffer = null;//保存图片流
+            List<int[]> imgRGB = new ArrayList<int[]>();//保存所有图片的RGB
+            int[] _imgRGB;//保存一张图片的RGB数据
+            for(int i = 0;i<picNum;i++){
+                buffer = piclist.get(i);
+                heightArray[i] = _height = buffer.getHeight();//图片高度
+                if(i==0){
+                    width=buffer.getWidth();
+                }
+                height += _height;//获取总高度
+                _imgRGB = new int[width * _height];//从图片中读取RGB
+                _imgRGB = buffer.getRGB(0,0,width,_height,_imgRGB,0,width);
+                imgRGB.add(_imgRGB);
+            }
+            _height = 0;//设置偏移高度为0
+            //生成新图片
+            BufferedImage imageResult = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
+            for(int i=0;i<picNum;i++){
+               int le = heightArray.length;
+                __height = heightArray[i];
+                if(i !=0) _height += __height;//计算偏移高度
+                int l = imgRGB.size();
+                imageResult.setRGB(0,_height,width,__height,imgRGB.get(i),0,width);//写入输入流
+            }
+            File outFile = new File(outPath);
+            ImageIO.write(imageResult,"jpg",outFile);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -146,6 +229,7 @@ public class ExaminationController {
     @PostMapping(value = "/findExaminationByIdCardAndCheckDate")
     @ResponseBody
     public String findExaminationByIdCardAndCheckDate(String idCard, String check_date, HttpServletRequest request){
+        String paramas = request.getParameter("paramas");
         Examination examination = new Examination();
         examination.setCheck_date(check_date);
         examination.setIdCard(idCard);
@@ -154,7 +238,14 @@ public class ExaminationController {
         String result="";
         if(list.size()>0){
           /*result="true";*/
-          result=list.get(0).getUrl();
+          String fileName = list.get(0).getUrl();
+//          if(paramas!=null){
+//              result=fileName.substring(0,fileName.indexOf("."))+".pdf";
+            result = fileName;
+//          }else{
+//              result=fileName.substring(0,fileName.indexOf("."))+".jpg";
+//          }
+
         }else{
            result="false";
         }
